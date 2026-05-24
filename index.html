@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>TimeTracker v0.91</title>
+<style>
+/* Tailwind CSS v3.4 - compiled utilities (offline-safe) */
+*,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: ;box-sizing:border-box;border:0 solid #e5e7eb}::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1}:after,:before{--tw-content:""}html{line-height:1.5;-webkit-text-size-adjust:100%;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-size:1em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;font-weight:inherit;line-height:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}img,video{max-width:100%;height:auto}[hidden]{display:none}
+.pointer-events-none{pointer-events:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.inset-0{inset:0}.top-0{top:0}.z-10{z-index:10}.z-40{z-index:40}.mb-1{margin-bottom:.25rem}.mb-2{margin-bottom:.5rem}.mb-4{margin-bottom:1rem}.ml-1{margin-left:.25rem}.mr-1{margin-right:.25rem}.mt-0\.5{margin-top:.125rem}.mt-5{margin-top:1.25rem}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-3{height:.75rem}.h-7{height:1.75rem}.h-full{height:100%}.min-h-\[50px\]{min-height:50px}.w-11{width:2.75rem}.w-3{width:.75rem}.w-64{width:16rem}.w-7{width:1.75rem}.w-full{width:100%}.min-w-\[90px\]{min-width:90px}.flex-1{flex:1 1 0%}.flex-shrink-0{flex-shrink:0}.cursor-pointer{cursor:pointer}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-7{grid-template-columns:repeat(7,minmax(0,1fr))}.grid-rows-6{grid-template-rows:repeat(6,minmax(0,1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-end{justify-content:flex-end}.justify-between{justify-content:space-between}.gap-1{gap:.25rem}.gap-2{gap:.5rem}.space-y-0\.5>:not([hidden])~:not([hidden]){margin-top:.125rem}.space-y-2>:not([hidden])~:not([hidden]){margin-top:.5rem}.space-y-3>:not([hidden])~:not([hidden]){margin-top:.75rem}.space-y-4>:not([hidden])~:not([hidden]){margin-top:1rem}.overflow-auto{overflow:auto}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.rounded{border-radius:.25rem}.rounded-full{border-radius:9999px}.rounded-md{border-radius:.375rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-r{border-right-width:1px}.border-r-0{border-right-width:0}.bg-black\/40{background-color:rgba(0,0,0,.4)}.p-1{padding:.25rem}.p-2{padding:.5rem}.p-3{padding:.75rem}.px-0\.5{padding-left:.125rem;padding-right:.125rem}.px-1\.5{padding-left:.375rem;padding-right:.375rem}.px-2{padding-left:.5rem;padding-right:.5rem}.py-0\.5{padding-top:.125rem;padding-bottom:.125rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.pr-1{padding-right:.25rem}.text-center{text-align:center}.text-right{text-align:right}.font-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-\[9px\]{font-size:9px}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xs{font-size:.75rem;line-height:1rem}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.italic{font-style:italic}.opacity-30{opacity:.3}.opacity-70{opacity:.7}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(.4,0,.2,1);transition-duration:.15s}.last\:border-r-0:last-child{border-right-width:0}.hover\:scale-110:hover{--tw-scale-x:1.1;--tw-scale-y:1.1;transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.hover\:bg-\[var\(--hover\)\]:hover{background-color:var(--hover)}@media(min-width:640px){.sm\:px-4{padding-left:1rem;padding-right:1rem}}@media(min-width:768px){.md\:flex{display:flex}.md\:min-h-\[70px\]{min-height:70px}.md\:w-14{width:3.5rem}.md\:text-xs{font-size:.75rem;line-height:1rem}}
+
+/* App custom styles */
+:root { --surface:#fff; --surface-alt:#f8fafc; --text:#1e293b; --text-muted:#64748b; --border:#e2e8f0; --primary:#4f46e5; --primary-fg:#fff; --hover:#f1f5f9; --danger:#ef4444; }
+.dark { --surface:#1e1e2e; --surface-alt:#181825; --text:#cdd6f4; --text-muted:#a6adc8; --border:#313244; --primary:#89b4fa; --primary-fg:#1e1e2e; --hover:#313244; --danger:#f38ba8; }
+html,body{margin:0;height:100%;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--surface);color:var(--text)}
+.bg-surface{background:var(--surface)}.bg-surface-alt{background:var(--surface-alt)}
+.text-main{color:var(--text)}.text-muted{color:var(--text-muted)}
+.border-main{border-color:var(--border)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:4px;padding:5px 12px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;border:1px solid var(--border);background:var(--surface);color:var(--text);transition:background .12s,opacity .12s;white-space:nowrap}
+.btn:hover{background:var(--hover)}.btn:active{opacity:.8}
+.btn-primary{background:var(--primary);color:var(--primary-fg);border-color:var(--primary)}.btn-primary:hover{opacity:.9}
+.btn-sm{padding:3px 8px;font-size:12px}.btn-icon{width:30px;height:30px;padding:0}
+.btn:disabled{opacity:.4;cursor:default;pointer-events:none}
+.input{width:100%;padding:8px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:13px;outline:none}
+.input:focus{border-color:var(--primary);box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 20%,transparent)}
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.ctx-menu{position:fixed;z-index:150;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:4px;box-shadow:0 8px 24px rgba(0,0,0,.18);min-width:150px}
+.ctx-menu button{display:block;width:100%;text-align:left;padding:7px 12px;border:none;background:none;color:var(--text);font-size:13px;border-radius:4px;cursor:pointer}
+.ctx-menu button:hover{background:var(--hover)}
+.ctx-menu button.danger{color:var(--danger)}
+.entry-block{position:absolute;border-radius:6px;cursor:grab;overflow:hidden;transition:box-shadow .12s;touch-action:none}
+.entry-block:hover{box-shadow:0 2px 12px rgba(0,0,0,.15)}
+.resize-n{position:absolute;top:0;left:0;right:0;height:6px;cursor:n-resize;z-index:5}
+.resize-s{position:absolute;bottom:0;left:0;right:0;height:6px;cursor:s-resize;z-index:5}
+@media(pointer:coarse){.resize-n{height:14px}.resize-s{height:14px}}
+.non-work-hour{background:color-mix(in srgb,var(--surface-alt) 80%,var(--border) 20%);opacity:.6}
+.hour-line{border-bottom:1px solid var(--border)}
+.half-line{border-bottom:1px dashed color-mix(in srgb,var(--border) 50%,transparent)}
+.quarter-line{position:absolute;left:0;right:0;border-bottom:1px solid color-mix(in srgb,var(--border) 25%,transparent)}
+.now-line{position:absolute;left:0;right:0;height:2px;background:var(--danger);z-index:15;pointer-events:none}
+.now-dot{position:absolute;left:-4px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--danger)}
+.drag-preview{position:absolute;left:4px;right:4px;border:2px dashed var(--primary);border-radius:6px;background:color-mix(in srgb,var(--primary) 10%,transparent);pointer-events:none;z-index:20}
+.selected-ring{outline:2px solid var(--primary);outline-offset:-2px}
+.panel-toggle{cursor:pointer;user-select:none}
+.panel-toggle .arrow{display:inline-block;transition:transform .15s;font-size:10px}
+.panel-toggle.collapsed .arrow{transform:rotate(-90deg)}
+.time-tooltip{position:fixed;z-index:300;background:var(--text);color:var(--surface);padding:2px 6px;border-radius:4px;font-size:11px;font-weight:600;pointer-events:none;white-space:nowrap}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--text-muted) 30%,transparent);border-radius:3px}
+::-webkit-scrollbar-track{background:transparent}
+@media(max-width:768px){.desktop-only{display:none!important}}
+@media(min-width:769px){.mobile-only{display:none!important}}
+
+/* Export dialog */
+.export-dialog{width:100%;max-width:430px}
+.export-dialog .exp-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px}
+.export-dialog .exp-row>label{font-size:13px;font-weight:500;color:var(--text-muted)}
+.export-dialog .exp-radio-group{display:flex;gap:16px}
+.export-dialog .exp-radio-opt{display:flex;align-items:center;gap:5px;font-size:13px;color:var(--text);cursor:pointer}
+.export-dialog .exp-radio-opt input[type=radio]{accent-color:var(--primary);margin:0}
+.export-dialog .exp-presets{display:flex;gap:8px;justify-content:center;margin-bottom:14px}
+.export-dialog .exp-preset-btn{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:500;cursor:pointer;color:var(--text);transition:all .1s}
+.export-dialog .exp-preset-btn:hover{background:var(--hover)}
+.export-dialog .exp-preset-btn.active{background:var(--primary);color:var(--primary-fg);border-color:var(--primary)}
+.export-dialog .exp-date-row{display:flex;gap:12px;justify-content:center;margin-bottom:6px}
+.export-dialog .exp-date-field{display:flex;flex-direction:column;gap:4px}
+.export-dialog .exp-date-field label{font-size:11px;font-weight:600;color:var(--text-muted);text-transform:uppercase}
+.export-dialog .exp-date-field input[type=date]{padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-size:13px;width:155px;color:var(--text);font-family:inherit;background:var(--surface)}
+.export-dialog .exp-date-field input[type=date]:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 15%,transparent)}
+.export-dialog .exp-date-field input.exp-error{border-color:var(--danger);box-shadow:0 0 0 2px color-mix(in srgb,var(--danger) 12%,transparent)}
+.export-dialog .exp-error-msg{text-align:center;font-size:12px;color:var(--danger);margin:8px 0 12px;font-weight:500;min-height:16px}
+.export-dialog .exp-list-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;padding:0 2px}
+.export-dialog .exp-list-header .exp-hint{font-size:11px;color:var(--text-muted)}
+.export-dialog .exp-list-header .exp-hint.active{color:var(--primary);font-weight:500}
+.export-dialog .exp-list-header button{font-size:11px;color:var(--primary);background:none;border:none;cursor:pointer;font-weight:500;padding:0}
+.export-dialog .exp-list-header button:hover{text-decoration:underline}
+.export-dialog .exp-project-list{border:1px solid var(--border);border-radius:8px;max-height:180px;overflow-y:auto;margin-bottom:4px}
+.export-dialog .exp-project-item{display:flex;align-items:center;gap:8px;padding:9px 12px;font-size:13px;cursor:pointer;border-bottom:1px solid color-mix(in srgb,var(--border) 50%,transparent);color:var(--text);user-select:none;transition:background .08s}
+.export-dialog .exp-project-item:last-child{border-bottom:none}
+.export-dialog .exp-project-item:hover{background:var(--hover)}
+.export-dialog .exp-project-item.selected{background:color-mix(in srgb,var(--primary) 8%,var(--surface))}
+.export-dialog .exp-check{width:16px;height:16px;border:1.5px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:11px;color:transparent;flex-shrink:0;transition:all .1s}
+.export-dialog .exp-project-item.selected .exp-check{background:var(--primary);border-color:var(--primary);color:var(--primary-fg)}
+.export-dialog .exp-shortcut-hint{font-size:10px;color:var(--text-muted);text-align:center;margin-bottom:14px;font-style:italic;opacity:.7}
+
+/* Keyboard shortcuts modal */
+.shortcuts-modal{max-width:480px}
+.shortcuts-modal .shortcut-grid{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;margin-top:12px}
+.shortcuts-modal .shortcut-key{font-family:ui-monospace,monospace;font-size:12px;background:var(--surface-alt);border:1px solid var(--border);border-radius:4px;padding:2px 8px;text-align:center;font-weight:500}
+.shortcuts-modal .shortcut-desc{font-size:13px;color:var(--text);display:flex;align-items:center}
+
+/* Summary bar chart */
+.summary-chart{display:flex;align-items:flex-end;gap:3px;height:40px;padding:4px 0}
+.summary-chart .chart-bar{flex:1;min-width:0;border-radius:3px 3px 0 0;transition:height .2s;position:relative}
+.summary-chart .chart-bar:hover::after{content:attr(data-label);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:10px;white-space:nowrap;background:var(--text);color:var(--surface);padding:2px 6px;border-radius:3px;margin-bottom:2px}
+</style>
+</head>
+<body>
+
+<div id="app" style="height:100%;display:flex;flex-direction:column;overflow:hidden"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+// DATA LAYER
+// ═══════════════════════════════════════════════════════════════
+const LS_KEY = 'tt_data_v2', TIMER_KEY = 'tt_timer'
+const START_HOUR = 6, END_HOUR = 24
+const DISPLAY_HOURS = Array.from({length: END_HOUR - START_HOUR}, (_, i) => i + START_HOUR)
+const HOUR_H = 60
+const MAX_TIMER_MINS = 480 // 8 hours
+
+function uid() { return crypto.randomUUID() }
+function snap15(m) { return DB.snapToGrid!==false ? Math.round(m / 15) * 15 : m }
+function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)) }
+function mToTime(m) { return `${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}` }
+function timeToM(s) { const [h,m]=s.split(':').map(Number); return h*60+m }
+function fmtDur(m) { const h=Math.floor(m/60),mn=m%60; return h?(mn?`${h}h ${mn}m`:`${h}h`):`${mn}m` }
+function toISO(d) { const y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0'); return `${y}-${m}-${day}` }
+function parseDate(s) { const [y,m,d]=s.split('-').map(Number); return new Date(y,m-1,d) }
+function addDays(d,n) { const r=new Date(d); r.setDate(r.getDate()+n); return r }
+function startOfWeek(d) { const r=new Date(d); r.setDate(r.getDate()-r.getDay()); return r }
+function fmtDayHeader(d) { return ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()]+' '+(d.getMonth()+1)+'/'+d.getDate() }
+function fmtMonth(d) { return d.toLocaleDateString('en-US',{month:'long',year:'numeric'}) }
+function fmtFull(d) { return d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}) }
+
+let DB = loadDB()
+function loadDB() {
+  try { const r=localStorage.getItem(LS_KEY); if(r) return JSON.parse(r) } catch{}
+  return { projects:[], templates:[], entries:[], theme:'light', view:'week', currentDate:toISO(new Date()), selProject:null, selTemplate:null, sidebarCollapsed:false, panelsCollapsed:{}, filterProject:false, snapToGrid:true }
+}
+function save() { localStorage.setItem(LS_KEY, JSON.stringify(DB)) }
+
+// History
+let histStack=[], futureStack=[]
+function pushHist(a) { histStack.push(a); if(histStack.length>60) histStack.shift(); futureStack=[] }
+function doUndo() {
+  const a=histStack.pop(); if(!a) return
+  futureStack.push(a)
+  if(a.t==='add') DB.entries=DB.entries.filter(e=>e.id!==a.id)
+  else if(a.t==='del') DB.entries.push(a.entry)
+  else if(a.t==='upd') { const e=DB.entries.find(x=>x.id===a.id); if(e) Object.assign(e,a.before) }
+  else if(a.t==='clearWeek') DB.entries.push(...a.entries)
+  else if(a.t==='delTemplate') DB.templates.push(a.template)
+  else if(a.t==='delProject') { DB.projects.push(a.project); DB.entries.push(...(a.entries||[])) }
+  save(); render()
+}
+function doRedo() {
+  const a=futureStack.pop(); if(!a) return
+  histStack.push(a)
+  if(a.t==='add') DB.entries.push(a.entry)
+  else if(a.t==='del') DB.entries=DB.entries.filter(e=>e.id!==a.id)
+  else if(a.t==='upd') { const e=DB.entries.find(x=>x.id===a.id); if(e) Object.assign(e,a.after) }
+  else if(a.t==='clearWeek') { const ids=new Set(a.entries.map(x=>x.id)); DB.entries=DB.entries.filter(e=>!ids.has(e.id)) }
+  else if(a.t==='delTemplate') { DB.templates=DB.templates.filter(x=>x.id!==a.template.id); DB.entries=DB.entries.filter(x=>x.taskTemplateId!==a.template.id) }
+  else if(a.t==='delProject') { DB.projects=DB.projects.filter(x=>x.id!==a.project.id); if(a.entries?.length){const ids=new Set(a.entries.map(x=>x.id));DB.entries=DB.entries.filter(e=>!ids.has(e.id))} }
+  save(); render()
+}
+
+function addEntry(data) {
+  const entry = { id:uid(), createdAt:Date.now(), updatedAt:Date.now(), notes:'', tags:[], ...data }
+  DB.entries.push(entry)
+  pushHist({ t:'add', id:entry.id, entry:{...entry} })
+  mergeOverlapping(entry.id)
+  save(); return entry
+}
+function updateEntry(id, patch) {
+  const e=DB.entries.find(x=>x.id===id); if(!e) return
+  const before={...e}
+  Object.assign(e, patch, {updatedAt:Date.now()})
+  pushHist({ t:'upd', id, before, after:{...e} })
+  mergeOverlapping(id)
+  save()
+}
+function deleteEntryById(id) {
+  const e=DB.entries.find(x=>x.id===id); if(!e) return
+  pushHist({ t:'del', id, entry:{...e} })
+  DB.entries=DB.entries.filter(x=>x.id!==id)
+  save()
+}
+
+function mergeOverlapping(targetId) {
+  const target = DB.entries.find(x=>x.id===targetId)
+  if(!target) return false
+  const overlaps = DB.entries.filter(e =>
+    e.id !== targetId && e.date === target.date &&
+    e.projectId === target.projectId && e.taskTemplateId === target.taskTemplateId &&
+    e.startMinutes < target.endMinutes && e.endMinutes > target.startMinutes
+  )
+  if(!overlaps.length) return false
+  for(const o of overlaps) {
+    target.startMinutes = Math.min(target.startMinutes, o.startMinutes)
+    target.endMinutes = Math.max(target.endMinutes, o.endMinutes)
+    if(o.notes) target.notes = [target.notes, o.notes].filter(Boolean).join('\n')
+    target.tags = [...new Set([...target.tags, ...o.tags])]
+  }
+  DB.entries = DB.entries.filter(e=>!overlaps.some(o=>o.id===e.id))
+  target.updatedAt = Date.now()
+  return true
+}
+
+function layoutEntries(entries) {
+  if(!entries.length) return new Map()
+  const sorted=[...entries].sort((a,b)=>a.startMinutes-b.startMinutes||(b.endMinutes-b.startMinutes)-(a.endMinutes-a.startMinutes))
+  const groups=[]; let cur=[],end=0
+  for(const e of sorted){ if(cur.length&&e.startMinutes>=end){groups.push(cur);cur=[];end=0} cur.push(e); end=Math.max(end,e.endMinutes) }
+  if(cur.length) groups.push(cur)
+  const map=new Map()
+  for(const g of groups){
+    const cols=[]
+    for(const e of g){
+      let placed=false
+      for(let c=0;c<cols.length;c++){ if(cols[c].endMinutes<=e.startMinutes){cols[c]=e;map.set(e.id,{col:c,total:0});placed=true;break} }
+      if(!placed){cols.push(e);map.set(e.id,{col:cols.length-1,total:0})}
+    }
+    const total=cols.length+1
+    for(const e of g){const m=map.get(e.id);if(m)m.total=total}
+  }
+  return map
+}
+
+function todayHours() {
+  const today = toISO(new Date())
+  return DB.entries.filter(e=>e.date===today).reduce((s,e)=>s+(e.endMinutes-e.startMinutes),0)
+}
+
+function getVisibleEntries() {
+  let entries = DB.entries
+  if(DB.filterProject && DB.selProject) entries = entries.filter(e=>e.projectId===DB.selProject)
+  return entries
+}
+
+function viewProjectTotals() {
+  const dates = getViewDates()
+  const entries = getVisibleEntries().filter(e=>dates.has(e.date))
+  const totals = new Map()
+  entries.forEach(e=>{
+    const p = DB.projects.find(x=>x.id===e.projectId)
+    if(!p) return
+    totals.set(p.id, (totals.get(p.id)||0) + (e.endMinutes - e.startMinutes))
+  })
+  return totals
+}
+
+// Seed demo data
+function seedDemo() {
+  if(DB.projects.length) return
+  DB.projects=[
+    {id:uid(),name:'Website Redesign',client:'Acme Corp',color:'#4f46e5',status:'active'},
+    {id:uid(),name:'Mobile App',client:'TechStart',color:'#0891b2',status:'active'},
+    {id:uid(),name:'API Integration',client:'DataFlow',color:'#16a34a',status:'active'},
+    {id:uid(),name:'Internal Tools',client:'Internal',color:'#ca8a04',status:'active'},
+  ]
+  DB.templates=[
+    {id:uid(),name:'Development',tags:['coding']},
+    {id:uid(),name:'Code Review',tags:['review']},
+    {id:uid(),name:'Meetings',tags:['communication']},
+    {id:uid(),name:'Design',tags:['creative']},
+    {id:uid(),name:'Testing',tags:['qa']},
+    {id:uid(),name:'Documentation',tags:['writing']},
+  ]
+  const today=toISO(new Date()), yday=toISO(addDays(new Date(),-1))
+  const p=DB.projects, t=DB.templates, now=Date.now()
+  DB.entries=[
+    {id:uid(),projectId:p[0].id,taskTemplateId:t[0].id,date:today,startMinutes:540,endMinutes:660,notes:'Homepage hero section',tags:['frontend'],createdAt:now,updatedAt:now},
+    {id:uid(),projectId:p[1].id,taskTemplateId:t[2].id,date:today,startMinutes:600,endMinutes:660,notes:'Sprint planning',tags:[],createdAt:now,updatedAt:now},
+    {id:uid(),projectId:p[2].id,taskTemplateId:t[0].id,date:today,startMinutes:690,endMinutes:810,notes:'REST endpoints',tags:['backend'],createdAt:now,updatedAt:now},
+    {id:uid(),projectId:p[3].id,taskTemplateId:t[5].id,date:today,startMinutes:840,endMinutes:930,notes:'API documentation',tags:[],createdAt:now,updatedAt:now},
+    {id:uid(),projectId:p[0].id,taskTemplateId:t[3].id,date:yday,startMinutes:480,endMinutes:600,notes:'Dashboard wireframes',tags:['ui'],createdAt:now,updatedAt:now},
+    {id:uid(),projectId:p[1].id,taskTemplateId:t[0].id,date:yday,startMinutes:630,endMinutes:780,notes:'Login flow',tags:['auth'],createdAt:now,updatedAt:now},
+  ]
+  save()
+}
+seedDemo()
+
+// ═══════════════════════════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════════════════════════
+function render() {
+  const app = document.getElementById('app')
+  app.innerHTML = buildApp()
+  applyPostRender()
+}
+
+function buildApp() {
+  return `
+    ${buildToolbar()}
+    ${buildProjectTotalsBar()}
+    <div class="flex flex-1 overflow-hidden relative">
+      <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 z-40 mobile-only" style="display:none" onclick="closeSidebar()"></div>
+      ${buildSidebar()}
+      <div class="flex-1 flex overflow-hidden">
+        ${DB.view==='month' ? buildMonthView() : buildTimeGrid()}
+      </div>
+    </div>
+  `
+}
+
+function buildToolbar() {
+  const d = parseDate(DB.currentDate)
+  let label = ''
+  if(DB.view==='day') label = fmtFull(d)
+  else if(DB.view==='week') {
+    const ws = startOfWeek(d), we = addDays(ws,6)
+    label = `${ws.toLocaleDateString('en-US',{month:'short',day:'numeric'})} – ${we.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}`
+  } else label = fmtMonth(d)
+
+  const todayMins = todayHours()
+  const todayStr = todayMins > 0 ? fmtDur(todayMins) : '0h'
+
+  return `<header class="flex items-center justify-between border-b border-main px-2 sm:px-4 py-2 bg-surface flex-shrink-0">
+    <div class="flex items-center gap-1">
+      <button class="btn btn-icon mobile-only" onclick="toggleSidebar()">☰</button>
+      <button class="btn btn-icon btn-sm desktop-only" onclick="toggleSidebarCollapse()" title="Toggle sidebar">☰</button>
+      <button class="btn btn-sm" onclick="goToday()">Today</button>
+      <button class="btn btn-icon btn-sm" onclick="navDate(-1)">‹</button>
+      <button class="btn btn-icon btn-sm" onclick="navDate(1)">›</button>
+      <span class="text-sm font-medium ml-1 truncate desktop-only">${label}</span>
+    </div>
+    <div class="flex items-center gap-1">
+      ${timerStart
+        ?`<span id="timer-display" class="text-xs font-mono text-muted mr-1">00:00:00</span><button class="btn btn-sm" onclick="stopTimer()" style="color:var(--danger);border-color:var(--danger)">⏹ Stop</button>`
+        :`<button class="btn btn-sm" onclick="startTimer()">▶ Start</button>`}
+      <span class="text-xs text-muted mr-1 desktop-only">Today's Total: ${todayStr}</span>
+      <button class="btn btn-sm ${DB.filterProject?'btn-primary':''}" onclick="toggleFilter()" title="Filter to selected project">🔽</button>
+      <button class="btn btn-sm ${DB.snapToGrid?'btn-primary':''}" onclick="toggleSnap()" title="Snap to 15min grid">🧲</button>
+      ${['day','week','month'].map(v=>`<button class="btn btn-sm ${DB.view===v?'btn-primary':''}" onclick="setView('${v}')">${v[0].toUpperCase()+v.slice(1)}</button>`).join('')}
+      <button class="btn btn-icon btn-sm" onclick="doUndo()" ${histStack.length?'':'disabled'} title="Undo">↶</button>
+      <button class="btn btn-icon btn-sm" onclick="doRedo()" ${futureStack.length?'':'disabled'} title="Redo">↷</button>
+      <button class="btn btn-icon btn-sm" onclick="toggleTheme()" title="Theme">${DB.theme==='light'?'🌙':'☀️'}</button>
+      <button class="btn btn-icon btn-sm" onclick="showShortcutsPanel()" title="Keyboard shortcuts (?)">?</button>
+    </div>
+  </header>`
+}
+
+function buildProjectTotalsBar() {
+  const totals = viewProjectTotals()
+  if(!totals.size) return ''
+  const items = [...totals.entries()].map(([pid, mins])=>{
+    const p = DB.projects.find(x=>x.id===pid)
+    if(!p) return ''
+    return `<span class="flex items-center gap-1 text-xs"><span class="w-2 h-3 rounded" style="background:${p.color}"></span>${esc(p.name)} <strong>${fmtDur(mins)}</strong></span>`
+  }).filter(Boolean).join('<span class="text-muted text-xs">·</span>')
+  const grandTotal = [...totals.values()].reduce((s,v)=>s+v,0)
+  return `<div class="flex items-center gap-2 px-2 sm:px-4 py-1 border-b border-main bg-surface-alt flex-shrink-0 overflow-x-auto text-xs flex-wrap" style="min-height:24px">
+    ${items}<span class="text-muted">= ${fmtDur(grandTotal)}</span>
+  </div>`
+}
+
+function buildSummaryChart() {
+  const dates = getViewDates()
+  if(!dates.size || DB.view==='month' || DB.view==='day') return ''
+  const sortedDates = [...dates].sort()
+  const dailyTotals = sortedDates.map(d=>DB.entries.filter(e=>e.date===d).reduce((s,e)=>s+(e.endMinutes-e.startMinutes),0))
+  const maxMins = Math.max(...dailyTotals, 60)
+  if(dailyTotals.every(v=>v===0)) return ''
+  const barH = 32
+  return `<div class="flex border-b border-main bg-surface flex-shrink-0" style="height:44px;align-items:stretch">
+    <div class="w-11 md:w-14 flex-shrink-0 border-r border-main" style="display:flex;align-items:flex-end;justify-content:center;padding-bottom:2px">
+      <span class="text-[10px] text-muted">📊</span>
+    </div>
+    <div style="display:flex;flex:1;align-items:stretch">
+      ${sortedDates.map((d,i)=>{
+        const mins=dailyTotals[i]
+        const h=mins>0?Math.max(Math.round(mins/maxMins*barH),3):0
+        const dayLabel=parseDate(d).toLocaleDateString('en-US',{weekday:'short'})+' '+fmtDur(mins)
+        return `<div style="flex:1;min-width:90px;border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:2px" title="${dayLabel}">
+          <div style="width:60%;height:${h}px;background:var(--primary);opacity:${mins>0?'0.6':'0.15'};border-radius:3px 3px 0 0"></div>
+        </div>`
+      }).join('')}
+    </div>
+  </div>`
+}
+
+function buildSidebar() {
+  if(DB.sidebarCollapsed) {
+    return `<aside id="sidebar" class="border-r border-main bg-surface flex-col flex-shrink-0 hidden md:flex" style="z-index:45;width:0;overflow:hidden"></aside>`
+  }
+  const projects = DB.projects.filter(p=>p.status==='active')
+  const archivedProjects = DB.projects.filter(p=>p.status==='archived')
+  const pCollapsed = DB.panelsCollapsed.projects
+  const aCollapsed = DB.panelsCollapsed.archived
+  const tCollapsed = DB.panelsCollapsed.templates
+  const eCollapsed = DB.panelsCollapsed.export
+
+  return `<aside id="sidebar" class="w-64 border-r border-main bg-surface flex-col overflow-hidden flex-shrink-0 hidden md:flex" style="z-index:45">
+    <div class="flex items-center justify-between p-3 border-b border-main">
+      <h2 class="font-semibold text-sm">Time Tracker</h2>
+      <button class="btn btn-icon btn-sm mobile-only" onclick="closeSidebar()">✕</button>
+    </div>
+    <div class="flex-1 overflow-y-auto p-3 space-y-4">
+      <section>
+        <div class="space-y-2">
+          <select class="input" onchange="selectProject(this.value)" style="font-size:12px">
+            <option value="">— Select Project —</option>
+            ${projects.map(p=>`<option value="${p.id}" ${DB.selProject===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}
+          </select>
+          <select class="input" onchange="selectTemplate(this.value)" style="font-size:12px">
+            <option value="">— Select Task —</option>
+            ${DB.templates.map(t=>`<option value="${t.id}" ${DB.selTemplate===t.id?'selected':''}>${esc(t.name)}</option>`).join('')}
+          </select>
+        </div>
+      </section>
+      <section>
+        <div class="flex items-center justify-between mb-2 panel-toggle ${pCollapsed?'collapsed':''}" onclick="togglePanel('projects')">
+          <h3 class="text-xs font-semibold uppercase text-muted"><span class="arrow">▼</span> Projects</h3>
+          <button class="btn btn-sm" onclick="event.stopPropagation();showModal('project')">+</button>
+        </div>
+        ${pCollapsed?'':`<div class="space-y-0.5">
+          ${projects.map(p=>`
+            <div class="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer text-sm hover:bg-[var(--hover)] ${DB.selProject===p.id?'selected-ring':''}" draggable="true" ondragstart="projectDragStart(event,'${p.id}')" ondragover="projectDragOver(event)" ondrop="projectDrop(event,'${p.id}')" onclick="selectProject('${p.id}')" oncontextmenu="event.preventDefault();showProjectCtx(event,'${p.id}')">
+              <span class="w-3 h-3 rounded-full flex-shrink-0" style="background:${p.color}"></span>
+              <span class="truncate flex-1">${esc(p.name)}</span>
+              <span class="text-xs text-muted truncate">${esc(p.client)}</span>
+              <button class="btn btn-sm btn-icon" style="width:20px;height:20px;font-size:10px;border:none;opacity:.5" onclick="event.stopPropagation();showModal('editProject','${p.id}')" title="Edit">✏️</button>
+              <button class="btn btn-sm btn-icon" style="width:20px;height:20px;font-size:10px;border:none;opacity:.5" onclick="event.stopPropagation();confirmDeleteProject('${p.id}')" title="Delete">✕</button>
+            </div>
+          `).join('')}
+          ${projects.length===0?'<p class="text-xs text-muted px-2">No projects yet</p>':''}
+        </div>`}
+        ${archivedProjects.length?`
+        <div class="flex items-center justify-between mt-2 mb-1 panel-toggle ${aCollapsed?'collapsed':''}" onclick="togglePanel('archived')">
+          <h3 class="text-[10px] font-semibold uppercase text-muted"><span class="arrow">▼</span> Archived (${archivedProjects.length})</h3>
+        </div>
+        ${aCollapsed?'':`<div class="space-y-0.5 opacity-60">
+          ${archivedProjects.map(p=>`
+            <div class="flex items-center gap-2 px-2 py-1 rounded-md text-xs hover:bg-[var(--hover)]">
+              <span class="w-2 h-2 rounded-full flex-shrink-0" style="background:${p.color}"></span>
+              <span class="truncate flex-1">${esc(p.name)}</span>
+              <button class="btn btn-sm btn-icon" style="width:18px;height:18px;font-size:9px;border:none;opacity:.6" onclick="event.stopPropagation();unarchiveProject('${p.id}')" title="Unarchive">↩</button>
+            </div>
+          `).join('')}
+        </div>`}`:''}
+      </section>
+      <section>
+        <div class="flex items-center justify-between mb-2 panel-toggle ${tCollapsed?'collapsed':''}" onclick="togglePanel('templates')">
+          <h3 class="text-xs font-semibold uppercase text-muted"><span class="arrow">▼</span> Tasks</h3>
+          <button class="btn btn-sm" onclick="event.stopPropagation();showModal('template')">+</button>
+        </div>
+        ${tCollapsed?'':`<div class="space-y-0.5">
+          ${DB.templates.map(t=>`
+            <div class="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer text-sm hover:bg-[var(--hover)] ${DB.selTemplate===t.id?'selected-ring':''}" onclick="selectTemplate('${t.id}')">
+              <span class="truncate flex-1">${esc(t.name)}</span>
+              <button class="btn btn-sm btn-icon" style="width:20px;height:20px;font-size:10px;border:none;opacity:.5" onclick="event.stopPropagation();confirmDeleteTemplate('${t.id}')" title="Delete">✕</button>
+            </div>
+          `).join('')}
+          ${DB.templates.length===0?'<p class="text-xs text-muted px-2">No templates yet</p>':''}
+        </div>`}
+      </section>
+      <section>
+        <div class="flex items-center justify-between mb-2 panel-toggle ${eCollapsed?'collapsed':''}" onclick="togglePanel('export')">
+          <h3 class="text-xs font-semibold uppercase text-muted"><span class="arrow">▼</span> Actions</h3>
+        </div>
+        ${eCollapsed?'':`<div class="space-y-2">
+          <button class="btn btn-sm w-full" onclick="openExportDialog()">📄 Export</button>
+          <div class="flex gap-2">
+            <button class="btn btn-sm flex-1" onclick="exportConfig()">💾 Save</button>
+            <button class="btn btn-sm flex-1" onclick="importConfig()">📂 Load</button>
+          </div>
+          <button class="btn btn-sm w-full" onclick="clearWeek()" style="color:var(--danger);border-color:var(--danger)">🗑️ Clear Week</button>
+        </div>`}
+      </section>
+    </div>
+  </aside>`
+}
+
+function buildTimeGrid() {
+  const dates = getDates()
+  const isWeek = DB.view === 'week'
+  const gridH = DISPLAY_HOURS.length * HOUR_H
+  return `
+    <div class="flex-1 flex flex-col overflow-hidden">
+      ${isWeek?`<div class="flex flex-shrink-0">
+        <div class="w-11 md:w-14 flex-shrink-0 border-r border-main"></div>
+        <div class="flex flex-1">${dates.map(date=>{const d=parseDate(date),isToday=date===toISO(new Date());return`<div class="flex-1 min-w-[90px] border-r border-main last:border-r-0 text-center py-1 border-b border-main text-xs font-medium bg-surface ${isToday?'font-bold':''}"><span ${isToday?'style="color:var(--primary)"':''}>${fmtDayHeader(d)}</span></div>`}).join('')}</div>
+      </div>`:''}
+      ${buildSummaryChart()}
+      <div id="cal-scroll" class="flex-1 overflow-y-auto overflow-x-auto flex">
+        <div class="w-11 md:w-14 flex-shrink-0 border-r border-main" style="padding-top:8px">
+          <div class="relative" style="height:${gridH}px">
+            ${DISPLAY_HOURS.map((h,i)=>`<div class="absolute w-full text-right pr-1 text-[10px] md:text-xs text-muted" style="top:${i*HOUR_H}px;transform:translateY(-50%)">${mToTime(h*60)}</div>`).join('')}
+          </div>
+        </div>
+        ${dates.map(date=>buildDayCol(date, isWeek)).join('')}
+      </div>
+    </div>
+  `
+}
+
+function buildDayCol(dateStr, showHeader) {
+  const entries = getVisibleEntries().filter(e=>e.date===dateStr)
+  const layout = layoutEntries(entries)
+  const d = parseDate(dateStr)
+  const isToday = dateStr === toISO(new Date())
+  const nowMin = (()=>{ const n=new Date(); return n.getHours()*60+n.getMinutes() })()
+  const gridH = DISPLAY_HOURS.length * HOUR_H
+
+  return `<div class="flex-1 min-w-[90px] ${showHeader?'border-r border-main last:border-r-0':''} flex flex-col" style="padding-top:8px">
+    <div class="relative flex-1" style="height:${gridH}px;touch-action:none" data-date="${dateStr}" id="col-${dateStr}">
+      ${DISPLAY_HOURS.map((h,i)=>`<div class="absolute w-full hour-line ${h<7||h>=17?'non-work-hour':''}" style="top:${i*HOUR_H}px;height:${HOUR_H}px"></div>`).join('')}
+      ${DISPLAY_HOURS.map((h,i)=>`<div class="absolute w-full half-line" style="top:${i*HOUR_H+HOUR_H/2}px"></div><div class="quarter-line" style="top:${i*HOUR_H+HOUR_H/4}px"></div><div class="quarter-line" style="top:${i*HOUR_H+HOUR_H*3/4}px"></div>`).join('')}
+      ${isToday && nowMin >= START_HOUR*60 ?`<div class="now-line" style="top:${((nowMin-START_HOUR*60)/60)*HOUR_H}px"><div class="now-dot"></div></div>`:''}
+      ${entries.map(entry=>{
+        const info=layout.get(entry.id)||{col:0,total:2}
+        const top=((entry.startMinutes-START_HOUR*60)/60)*HOUR_H
+        const height=Math.max(((entry.endMinutes-entry.startMinutes)/60)*HOUR_H, 15)
+        const w=(1/info.total*100)+'%'
+        const left=(info.col/info.total*100)+'%'
+        const proj=DB.projects.find(p=>p.id===entry.projectId)
+        const tmpl=DB.templates.find(t=>t.id===entry.taskTemplateId)
+        const color=proj?.color||'#6b7280'
+        return `<div class="entry-block" data-entry-id="${entry.id}" style="top:${top}px;height:${height}px;width:${w};left:${left};background:color-mix(in srgb,${color} 12%,var(--surface));border-left:3px solid ${color};border-top:1px solid color-mix(in srgb,${color} 30%,transparent);border-right:1px solid color-mix(in srgb,${color} 30%,transparent);border-bottom:1px solid color-mix(in srgb,${color} 30%,transparent)">
+          <div class="resize-n" data-resize="top" data-entry-id="${entry.id}"></div>
+          <div class="px-1.5 py-0.5 overflow-hidden h-full pointer-events-none">
+            <div class="text-[11px] font-semibold truncate" style="color:${color}">${esc(proj?.name||'?')}</div>
+            ${height>28?`<div class="text-[11px] text-muted truncate">${esc(tmpl?.name||'')}</div>`:''}
+            ${height>42?`<div class="text-[10px] text-muted">${mToTime(entry.startMinutes)}–${mToTime(entry.endMinutes)} (${fmtDur(entry.endMinutes-entry.startMinutes)})</div>`:''}
+            ${height>58&&entry.notes?`<div class="text-[10px] text-muted truncate opacity-70">📝 ${esc(entry.notes)}</div>`:''}
+          </div>
+          <div class="resize-s" data-resize="bottom" data-entry-id="${entry.id}"></div>
+        </div>`
+      }).join('')}
+    </div>
+  </div>`
+}
+
+function buildMonthView() {
+  const cur = parseDate(DB.currentDate)
+  const mStart = new Date(cur.getFullYear(), cur.getMonth(), 1)
+  const calStart = startOfWeek(mStart)
+  let html = `<div class="flex-1 flex flex-col p-2 overflow-auto">
+    <div class="grid grid-cols-7 mb-1">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="text-center text-xs font-medium text-muted py-1">${d}</div>`).join('')}</div>
+    <div class="flex-1 grid grid-rows-6 gap-1">`
+  let d = new Date(calStart)
+  for(let w=0;w<6;w++){
+    html+='<div class="grid grid-cols-7 gap-1">'
+    for(let i=0;i<7;i++){
+      const iso=toISO(d), inMonth=d.getMonth()===cur.getMonth(), isToday=iso===toISO(new Date())
+      const dayEntries=getVisibleEntries().filter(e=>e.date===iso)
+      const total=dayEntries.reduce((s,e)=>s+(e.endMinutes-e.startMinutes),0)
+      html+=`<div class="rounded-md border border-main p-1 cursor-pointer hover:bg-[var(--hover)] min-h-[50px] md:min-h-[70px] ${!inMonth?'opacity-30':''} ${isToday?'selected-ring':''}" onclick="goToDate('${iso}')">
+        <div class="text-[11px] font-medium" ${isToday?'style="color:var(--primary)"':''}>${d.getDate()}</div>
+        ${dayEntries.slice(0,5).map(e=>{const p=DB.projects.find(x=>x.id===e.projectId);const dur=fmtDur(e.endMinutes-e.startMinutes);return`<div class="text-[9px] truncate rounded px-0.5 mt-0.5" style="background:color-mix(in srgb,${p?.color||'#666'} 15%,transparent);color:${p?.color||'#666'}" title="${esc(p?.name||'?')} — ${mToTime(e.startMinutes)}–${mToTime(e.endMinutes)} (${dur})">${esc(p?.name||'?')}</div>`}).join('')}
+        ${dayEntries.length>5?`<div class="text-[9px] text-muted">+${dayEntries.length-5}</div>`:''}
+        ${total?`<div class="text-[9px] text-muted">${fmtDur(total)}</div>`:''}
+      </div>`
+      d = addDays(d,1)
+    }
+    html+='</div>'
+  }
+  html+='</div></div>'
+  return html
+}
+
+function getDates() {
+  if(DB.view==='day') return [DB.currentDate]
+  const start = startOfWeek(parseDate(DB.currentDate))
+  return Array.from({length:7},(_,i)=>toISO(addDays(start,i)))
+}
+
+function getViewDates() {
+  if(DB.view==='day') return new Set([DB.currentDate])
+  if(DB.view==='week') return new Set(getDates())
+  const cur = parseDate(DB.currentDate)
+  const mStart = new Date(cur.getFullYear(), cur.getMonth(), 1)
+  const mEnd = new Date(cur.getFullYear(), cur.getMonth()+1, 0)
+  const dates = new Set()
+  let d = new Date(mStart)
+  while(d <= mEnd) { dates.add(toISO(d)); d = addDays(d,1) }
+  return dates
+}
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;') }
+
+function applyPostRender() {
+  const sc = document.getElementById('cal-scroll')
+  if(sc && !sc.dataset.scrolled) { sc.scrollTop = 0; sc.dataset.scrolled='1' }
+  if(timerStart) updateTimerDisplay()
+}
+
+function renderPreserveScroll() {
+  const sc = document.getElementById('cal-scroll')
+  const scrollTop = sc ? sc.scrollTop : null
+  render()
+  if(scrollTop !== null) {
+    const sc2 = document.getElementById('cal-scroll')
+    if(sc2) { sc2.scrollTop = scrollTop; sc2.dataset.scrolled = '1' }
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// POINTER INTERACTIONS
+// ═══════════════════════════════════════════════════════════════
+let drag = null
+
+function getMins(clientY, colEl) {
+  const rect = colEl.getBoundingClientRect()
+  const y = clientY - rect.top
+  return snap15(clamp(Math.round(y / HOUR_H * 60) + START_HOUR*60, START_HOUR*60, END_HOUR*60))
+}
+
+function getColFromPoint(target) {
+  const el = target.closest('[data-date]')
+  return el ? { el, date: el.dataset.date } : null
+}
+
+function getColFromXY(x, y) {
+  const el = document.elementFromPoint(x, y)?.closest('[data-date]')
+  return el ? { el, date: el.dataset.date } : null
+}
+
+let longPressTimer = null
+const isTouchDevice = () => 'ontouchstart' in window || navigator.maxTouchPoints > 0
+
+// Time tooltip
+function showTimeTooltip(clientX, clientY, text) {
+  let tt = document.getElementById('time-tooltip')
+  if(!tt) { tt = document.createElement('div'); tt.id='time-tooltip'; tt.className='time-tooltip'; document.body.appendChild(tt) }
+  tt.textContent = text
+  tt.style.left = (clientX + 12) + 'px'
+  tt.style.top = (clientY - 20) + 'px'
+  tt.style.display = ''
+}
+function hideTimeTooltip() {
+  const tt = document.getElementById('time-tooltip')
+  if(tt) tt.style.display = 'none'
+}
+
+document.addEventListener('pointerdown', function(e) {
+  if(e.target.closest('.modal-bg, .ctx-menu, button, select, input, a, .btn')) return
+  closeCtxMenu()
+  const colInfo = getColFromPoint(e.target)
+  if(!colInfo) return
+
+  const resizeEl = e.target.closest('[data-resize]')
+  const entryEl = e.target.closest('[data-entry-id]')
+
+  if(resizeEl) {
+    e.preventDefault()
+    const id = resizeEl.dataset.entryId
+    const entry = DB.entries.find(x=>x.id===id)
+    if(!entry) return
+    drag = { type:'resize', id, edge:resizeEl.dataset.resize, origStart:entry.startMinutes, origEnd:entry.endMinutes, colEl:colInfo.el }
+    document.body.style.cursor = resizeEl.dataset.resize==='top'?'n-resize':'s-resize'
+    showTimeTooltip(e.clientX, e.clientY, resizeEl.dataset.resize==='top'?mToTime(entry.startMinutes):mToTime(entry.endMinutes))
+  } else if(entryEl) {
+    const id = entryEl.dataset.entryId
+    const entry = DB.entries.find(x=>x.id===id)
+    if(!entry) return
+    e.preventDefault()
+    const forceMove = e.shiftKey
+    const canCreate = !forceMove && DB.selProject && DB.selTemplate
+    if(canCreate) {
+      if(isTouchDevice()) {
+        const clickMin = getMins(e.clientY, colInfo.el)
+        drag = { type:'pending', id, clickMin, origStart:entry.startMinutes, origEnd:entry.endMinutes, origDate:entry.date, dur:entry.endMinutes-entry.startMinutes, colEl:colInfo.el, moved:false, date:colInfo.date, startMin:clickMin, curMin:clickMin }
+        longPressTimer = setTimeout(()=>{
+          if(drag && drag.type==='pending') { drag.type='move'; document.body.style.cursor='grabbing'; if(navigator.vibrate) navigator.vibrate(30) }
+          longPressTimer = null
+        }, 500)
+      } else {
+        const min = getMins(e.clientY, colInfo.el)
+        drag = { type:'create', date:colInfo.date, startMin:min, curMin:min, colEl:colInfo.el }
+        showDragPreview(colInfo.el, min, min)
+        showTimeTooltip(e.clientX, e.clientY, mToTime(min))
+      }
+    } else {
+      const clickMin = getMins(e.clientY, colInfo.el)
+      drag = { type:'move', id, clickMin, origStart:entry.startMinutes, origEnd:entry.endMinutes, origDate:entry.date, dur:entry.endMinutes-entry.startMinutes, colEl:colInfo.el, moved:false }
+      document.body.style.cursor = 'grabbing'
+      showTimeTooltip(e.clientX, e.clientY, `${mToTime(entry.startMinutes)}–${mToTime(entry.endMinutes)}`)
+    }
+  } else {
+    if(!DB.selProject || !DB.selTemplate) return
+    e.preventDefault()
+    const min = getMins(e.clientY, colInfo.el)
+    drag = { type:'create', date:colInfo.date, startMin:min, curMin:min, colEl:colInfo.el }
+    showDragPreview(colInfo.el, min, min)
+    showTimeTooltip(e.clientX, e.clientY, mToTime(min))
+  }
+}, { passive: false })
+
+document.addEventListener('pointermove', function(e) {
+  if(!drag) return
+  e.preventDefault()
+
+  if(drag.type === 'pending') {
+    const curMin = getMins(e.clientY, drag.colEl)
+    if(Math.abs(curMin - drag.startMin) >= 15) {
+      clearTimeout(longPressTimer); longPressTimer = null
+      drag = { type:'create', date:drag.date, startMin:drag.startMin, curMin, colEl:drag.colEl }
+      showDragPreview(drag.colEl, drag.startMin, curMin)
+    }
+    return
+  }
+
+  if(drag.type === 'create') {
+    drag.curMin = getMins(e.clientY, drag.colEl)
+    showDragPreview(drag.colEl, drag.startMin, drag.curMin)
+    const s=Math.min(drag.startMin,drag.curMin), en=Math.max(drag.startMin,drag.curMin)
+    showTimeTooltip(e.clientX, e.clientY, `${mToTime(s)}–${mToTime(en)}`)
+  } else if(drag.type === 'resize') {
+    const entry = DB.entries.find(x=>x.id===drag.id)
+    if(!entry) return
+    const min = getMins(e.clientY, drag.colEl)
+    if(drag.edge==='bottom') entry.endMinutes = Math.max(entry.startMinutes+15, min)
+    else entry.startMinutes = Math.min(entry.endMinutes-15, min)
+    renderEntryInPlace(entry)
+    showTimeTooltip(e.clientX, e.clientY, drag.edge==='bottom'?mToTime(entry.endMinutes):mToTime(entry.startMinutes))
+  } else if(drag.type === 'move') {
+    const entry = DB.entries.find(x=>x.id===drag.id)
+    if(!entry) return
+    const colAtPoint = getColFromXY(e.clientX, e.clientY)
+    if(colAtPoint) {
+      const dayChanged = colAtPoint.date !== entry.date
+      if(dayChanged) { entry.date = colAtPoint.date; drag.moved = true }
+      drag.colEl = colAtPoint.el
+      const curMin = getMins(e.clientY, drag.colEl)
+      const delta = curMin - drag.clickMin
+      if(Math.abs(delta) >= 15) drag.moved = true
+      let newStart = clamp(drag.origStart + delta, START_HOUR*60, END_HOUR*60-drag.dur)
+      if(DB.snapToGrid!==false) newStart = snap15(newStart)
+      entry.startMinutes = newStart; entry.endMinutes = newStart + drag.dur
+      if(dayChanged) { renderPreserveScroll(); drag.colEl = document.getElementById('col-'+entry.date) }
+      else renderEntryInPlace(entry)
+      showTimeTooltip(e.clientX, e.clientY, `${mToTime(entry.startMinutes)}–${mToTime(entry.endMinutes)}`)
+    }
+  }
+}, { passive: false })
+
+document.addEventListener('pointerup', function(e) {
+  if(!drag) return
+  if(longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null }
+  document.body.style.cursor = ''
+  removeDragPreview()
+  hideTimeTooltip()
+
+  if(drag.type === 'pending') {
+    const entry = DB.entries.find(x=>x.id===drag.id)
+    if(entry) { entry.startMinutes=drag.origStart; entry.endMinutes=drag.origEnd; entry.date=drag.origDate }
+    const editId = drag.id; drag = null; render()
+    showModal('edit', editId)
+  } else if(drag.type === 'create') {
+    const s = Math.min(drag.startMin, drag.curMin), end = Math.max(drag.startMin, drag.curMin)
+    if(end - s >= 15) addEntry({ projectId:DB.selProject, taskTemplateId:DB.selTemplate, date:drag.date, startMinutes:s, endMinutes:end })
+    else if(isTouchDevice()) addEntry({ projectId:DB.selProject, taskTemplateId:DB.selTemplate, date:drag.date, startMinutes:s, endMinutes:s+30 })
+    drag = null; render()
+  } else if(drag.type === 'resize') {
+    const entry = DB.entries.find(x=>x.id===drag.id)
+    if(entry && (entry.startMinutes!==drag.origStart || entry.endMinutes!==drag.origEnd)) { mergeOverlapping(drag.id); save() }
+    else if(entry) { entry.startMinutes=drag.origStart; entry.endMinutes=drag.origEnd }
+    drag = null; render()
+  } else if(drag.type === 'move') {
+    if(!drag.moved) {
+      const entry = DB.entries.find(x=>x.id===drag.id)
+      if(entry) { entry.startMinutes=drag.origStart; entry.endMinutes=drag.origEnd; entry.date=drag.origDate }
+      const editId = drag.id; drag = null; render()
+      showModal('edit', editId)
+    } else {
+      const entry = DB.entries.find(x=>x.id===drag.id)
+      if(entry) pushHist({ t:'upd', id:drag.id, before:{startMinutes:drag.origStart, endMinutes:drag.origEnd, date:drag.origDate}, after:{startMinutes:entry.startMinutes, endMinutes:entry.endMinutes, date:entry.date} })
+      mergeOverlapping(drag.id); save()
+      drag = null; render()
+    }
+  } else drag = null
+})
+
+document.addEventListener('pointercancel', function() {
+  if(longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null }
+  hideTimeTooltip()
+  if(drag) {
+    if(drag.type==='move'||drag.type==='resize'||drag.type==='pending') {
+      const entry = DB.entries.find(x=>x.id===drag.id)
+      if(entry) { entry.startMinutes=drag.origStart; entry.endMinutes=drag.origEnd; if(drag.origDate) entry.date=drag.origDate }
+    }
+    drag = null; render()
+  }
+})
+
+document.addEventListener('selectstart', e => { if(drag) e.preventDefault() })
+document.addEventListener('contextmenu', function(e) {
+  const entryEl = e.target.closest('[data-entry-id]')
+  if(!entryEl) return
+  e.preventDefault(); showCtxMenu(e.clientX, e.clientY, entryEl.dataset.entryId)
+})
+document.addEventListener('dblclick', function(e) {
+  const entryEl = e.target.closest('[data-entry-id]')
+  if(entryEl) { e.preventDefault(); showModal('edit', entryEl.dataset.entryId); return }
+  // Double-click empty grid to create entry with preset project/task
+  const colEl = e.target.closest('[data-date]')
+  if(colEl && DB.selProject && DB.selTemplate) {
+    e.preventDefault()
+    const min = getMins(e.clientY, colEl)
+    addEntry({ projectId:DB.selProject, taskTemplateId:DB.selTemplate, date:colEl.dataset.date, startMinutes:min, endMinutes:min+30 })
+    render()
+  }
+})
+document.addEventListener('keydown', function(e) {
+  if(e.key==='Escape') { closeModal(); closeCtxMenu(); closeExportDialog(); closeShortcutsPanel() }
+  if((e.ctrlKey||e.metaKey)&&(e.key==='z'||e.key==='Z')){e.preventDefault();e.shiftKey?doRedo():doUndo()}
+  if((e.ctrlKey||e.metaKey)&&(e.key==='y'||e.key==='Y')){e.preventDefault();doRedo()}
+  if(e.key==='?' && !e.target.closest('input,select,textarea')) showShortcutsPanel()
+})
+
+function renderEntryInPlace(entry) {
+  const el = document.querySelector(`[data-entry-id="${entry.id}"].entry-block`)
+  if(!el) return
+  el.style.top = ((entry.startMinutes-START_HOUR*60)/60)*HOUR_H + 'px'
+  el.style.height = Math.max(((entry.endMinutes-entry.startMinutes)/60)*HOUR_H, 15) + 'px'
+}
+
+function showDragPreview(colEl, min1, min2) {
+  let pv = colEl.querySelector('.drag-preview')
+  if(!pv) { pv=document.createElement('div'); pv.className='drag-preview'; colEl.appendChild(pv) }
+  const s=Math.min(min1,min2), e=Math.max(min1,min2)
+  if(e-s < 15) { pv.style.display='none'; return }
+  pv.style.display=''
+  pv.style.top = ((s-START_HOUR*60)/60)*HOUR_H+'px'
+  pv.style.height = ((e-s)/60)*HOUR_H+'px'
+  const proj = DB.projects.find(p=>p.id===DB.selProject)
+  if(proj) { pv.style.borderColor=proj.color; pv.style.background=`color-mix(in srgb,${proj.color} 10%,transparent)` }
+}
+function removeDragPreview() { document.querySelectorAll('.drag-preview').forEach(el=>el.remove()) }
+
+// ═══════════════════════════════════════════════════════════════
+// GLOBAL ACTIONS
+// ═══════════════════════════════════════════════════════════════
+window.goToday = ()=>{ DB.currentDate=toISO(new Date()); save(); render() }
+window.navDate = (dir)=>{
+  const d=parseDate(DB.currentDate)
+  if(DB.view==='day') d.setDate(d.getDate()+dir)
+  else if(DB.view==='week') d.setDate(d.getDate()+dir*7)
+  else d.setMonth(d.getMonth()+dir)
+  DB.currentDate=toISO(d); save(); render()
+}
+window.setView = (v)=>{ DB.view=v; save(); render() }
+window.goToDate = (iso)=>{ DB.currentDate=iso; DB.view='day'; save(); render() }
+window.toggleTheme = ()=>{ DB.theme=DB.theme==='light'?'dark':'light'; document.documentElement.classList.toggle('dark',DB.theme==='dark'); save(); render() }
+window.selectProject = (id)=>{ DB.selProject=(DB.selProject===id||id==='')?null:id; save(); render() }
+window.selectTemplate = (id)=>{ DB.selTemplate=(DB.selTemplate===id||id==='')?null:id; save(); render() }
+window.toggleFilter = ()=>{ DB.filterProject=!DB.filterProject; save(); render() }
+window.toggleSnap = ()=>{ if(DB.snapToGrid===undefined) DB.snapToGrid=true; DB.snapToGrid=!DB.snapToGrid; save(); render() }
+window.doUndo = doUndo
+window.doRedo = doRedo
+
+window.toggleSidebarCollapse = ()=>{ DB.sidebarCollapsed=!DB.sidebarCollapsed; save(); render() }
+window.togglePanel = (name)=>{ if(!DB.panelsCollapsed) DB.panelsCollapsed={}; DB.panelsCollapsed[name]=!DB.panelsCollapsed[name]; save(); render() }
+
+window.toggleSidebar = ()=>{
+  const sb=document.getElementById('sidebar'), ov=document.getElementById('sidebar-overlay')
+  sb.style.position='fixed'; sb.style.top='0'; sb.style.bottom='0'; sb.style.left='0'; sb.style.width='16rem'
+  sb.classList.remove('hidden'); sb.classList.add('flex'); ov.style.display='block'
+}
+window.closeSidebar = ()=>{
+  const sb=document.getElementById('sidebar'), ov=document.getElementById('sidebar-overlay')
+  sb.classList.add('hidden'); sb.classList.remove('flex'); sb.style.position=''; ov.style.display='none'
+}
+
+// Delete project: removes project + all its entries (orphan cleanup)
+window.confirmDeleteProject = (id)=>{ const p=DB.projects.find(x=>x.id===id); if(p&&confirm(`Delete "${p.name}" and all its entries?`)){ const removedEntries=DB.entries.filter(x=>x.projectId===id).map(x=>({...x})); pushHist({t:'delProject',project:{...p},entries:removedEntries}); DB.projects=DB.projects.filter(x=>x.id!==id); DB.entries=DB.entries.filter(x=>x.projectId!==id); if(DB.selProject===id) DB.selProject=null; save(); render() }}
+
+// Delete template: removes template + all entries using it (orphan cleanup)
+window.confirmDeleteTemplate = (id)=>{ const t=DB.templates.find(x=>x.id===id); if(t&&confirm(`Delete "${t.name}" and all entries using it?`)){ const removedEntries=DB.entries.filter(x=>x.taskTemplateId===id).map(x=>({...x})); pushHist({t:'delTemplate', template:{...t}, entries:removedEntries}); DB.templates=DB.templates.filter(x=>x.id!==id); DB.entries=DB.entries.filter(x=>x.taskTemplateId!==id); if(DB.selTemplate===id) DB.selTemplate=null; save(); render() }}
+
+window.clearWeek = ()=>{
+  const dates = getDates()
+  const removed = getVisibleEntries().filter(e=>dates.includes(e.date))
+  if(!removed.length) return alert('No entries this week.')
+  if(!confirm(`Delete ${removed.length} entries from this week?`)) return
+  pushHist({ t:'clearWeek', entries:removed.map(e=>({...e})) })
+  const ids = new Set(removed.map(e=>e.id))
+  DB.entries = DB.entries.filter(e=>!ids.has(e.id))
+  save(); render()
+}
+
+window.showProjectCtx = (e, id) => {
+  closeCtxMenu()
+  const colors = ['#4f46e5','#0891b2','#16a34a','#ca8a04','#dc2626','#9333ea','#e11d48','#0d9488','#6366f1','#f59e0b']
+  const div = document.createElement('div')
+  div.className = 'ctx-menu'; div.id = 'ctx-menu'
+  div.style.left = Math.min(e.clientX, window.innerWidth-180)+'px'
+  div.style.top = Math.min(e.clientY, window.innerHeight-120)+'px'
+  div.innerHTML = `
+    <div style="padding:8px 12px;font-size:11px;color:var(--text-muted);text-transform:uppercase;font-weight:600">Change Color</div>
+    <div style="display:flex;flex-wrap:wrap;gap:4px;padding:4px 12px 8px">
+      ${colors.map(c=>`<button style="width:22px;height:22px;border-radius:50%;background:${c};border:2px solid transparent" onclick="changeProjectColor('${id}','${c}')"></button>`).join('')}
+    </div>
+    <button class="danger" onclick="closeCtxMenu();confirmDeleteProject('${id}')">🗑️ Delete Project</button>
+  `
+  document.body.appendChild(div)
+  setTimeout(()=>document.addEventListener('pointerdown', closeCtxOnOutside, {once:true}), 10)
+}
+window.changeProjectColor = (id, color) => { const p=DB.projects.find(x=>x.id===id); if(p){p.color=color;save();closeCtxMenu();render()} }
+
+// Archive project
+window.archiveProject = (id) => {
+  const p=DB.projects.find(x=>x.id===id)
+  if(p) { p.status='archived'; if(DB.selProject===id) DB.selProject=null; save(); render() }
+}
+window.unarchiveProject = (id) => {
+  const p=DB.projects.find(x=>x.id===id)
+  if(p) { p.status='active'; save(); render() }
+}
+
+// Keyboard shortcuts panel
+function showShortcutsPanel() {
+  if(document.getElementById('shortcuts-modal')) return
+  const div = document.createElement('div')
+  div.className = 'modal-bg'; div.id = 'shortcuts-modal'
+  div.addEventListener('mousedown', e=>{ if(e.target===div) closeShortcutsPanel() })
+  div.innerHTML = `<div class="modal-box shortcuts-modal" onclick="event.stopPropagation()">
+    <h3 class="text-lg font-semibold mb-2" style="text-align:center">Keyboard Shortcuts</h3>
+    <div class="shortcut-grid">
+      <span class="shortcut-key">?</span><span class="shortcut-desc">Show this panel</span>
+      <span class="shortcut-key">Ctrl+Z</span><span class="shortcut-desc">Undo</span>
+      <span class="shortcut-key">Ctrl+Shift+Z</span><span class="shortcut-desc">Redo</span>
+      <span class="shortcut-key">Esc</span><span class="shortcut-desc">Close dialog / modal</span>
+      <span class="shortcut-key">Double-click</span><span class="shortcut-desc">Edit entry / Create entry on empty grid</span>
+      <span class="shortcut-key">Shift+drag</span><span class="shortcut-desc">Move entry (force move mode)</span>
+      <span class="shortcut-key">Right-click</span><span class="shortcut-desc">Context menu on entry / project</span>
+      <span class="shortcut-key">Shift+click</span><span class="shortcut-desc">Range select in export dialog</span>
+    </div>
+    <div style="text-align:center;margin-top:16px"><button class="btn" onclick="closeShortcutsPanel()">Close</button></div>
+  </div>`
+  document.body.appendChild(div)
+}
+window.closeShortcutsPanel = () => { document.getElementById('shortcuts-modal')?.remove() }
+window.showShortcutsPanel = showShortcutsPanel
+
+// Drag-to-reorder projects in sidebar
+window.projectDragStart = (e, id) => { e.dataTransfer.setData('text/plain', id); e.dataTransfer.effectAllowed='move' }
+window.projectDragOver = (e) => { e.preventDefault(); e.dataTransfer.dropEffect='move' }
+window.projectDrop = (e, targetId) => {
+  e.preventDefault()
+  const draggedId = e.dataTransfer.getData('text/plain')
+  if(!draggedId || draggedId===targetId) return
+  const fromIdx = DB.projects.findIndex(p=>p.id===draggedId)
+  const toIdx = DB.projects.findIndex(p=>p.id===targetId)
+  if(fromIdx===-1||toIdx===-1) return
+  const [moved] = DB.projects.splice(fromIdx, 1)
+  DB.projects.splice(toIdx, 0, moved)
+  save(); render()
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MODALS
+// ═══════════════════════════════════════════════════════════════
+window.showModal = (type, arg) => {
+  closeCtxMenu()
+  let html = ''
+  if(type==='project') html = buildProjectModal()
+  else if(type==='editProject' && arg) html = buildEditProjectModal(arg)
+  else if(type==='template') html = buildTemplateModal()
+  else if(type==='edit' && arg) html = buildEditModal(arg)
+  if(!html) return
+  const div = document.createElement('div')
+  div.className = 'modal-bg'; div.id = 'modal-root'
+  div.innerHTML = html
+  div.addEventListener('mousedown', e=>{ if(e.target===div) closeModal() })
+  document.body.appendChild(div)
+  setTimeout(()=>div.querySelector('input:not([type=hidden]),select')?.focus(), 50)
+}
+window.closeModal = ()=>{ document.getElementById('modal-root')?.remove() }
+
+function buildProjectModal() {
+  const colors = ['#4f46e5','#0891b2','#16a34a','#ca8a04','#dc2626','#9333ea','#e11d48','#0d9488','#d97706','#6366f1','#ec4899','#14b8a6']
+  const autoColor = pickDistinctColor(colors)
+  return `<div class="modal-box" onclick="event.stopPropagation()">
+    <h3 class="text-lg font-semibold mb-4">New Project</h3>
+    <form onsubmit="event.preventDefault();submitProject()">
+      <div class="space-y-3">
+        <div><label class="text-xs font-medium block mb-1">Client</label><input class="input" id="m-client" placeholder="Client" autocomplete="off"></div>
+        <div><label class="text-xs font-medium block mb-1">Project Name</label><input class="input" id="m-name" placeholder="Project name" required autocomplete="off"></div>
+        <div class="flex gap-2 flex-wrap items-center" id="color-picker">
+          ${colors.map(c=>`<button type="button" class="w-7 h-7 rounded-full border-2 hover:scale-110 transition-transform color-btn" style="background:${c};border-color:${c===autoColor?'var(--text)':'transparent'};${c===autoColor?'transform:scale(1.15)':''}" data-color="${c}" onclick="pickColor('${c}')"></button>`).join('')}
+          <label class="w-7 h-7 rounded-full border-2 border-dashed hover:scale-110 transition-transform cursor-pointer relative" style="border-color:var(--border)" title="Custom color">
+            <input type="color" id="m-color-wheel" value="${autoColor}" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="pickColor(this.value)">
+            <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;pointer-events:none">🎨</span>
+          </label>
+        </div>
+        <input type="hidden" id="m-color" value="${autoColor}">
+      </div>
+      <div class="flex justify-end gap-2 mt-5">
+        <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Create</button>
+      </div>
+    </form>
+  </div>`
+}
+window.pickColor = (color) => { document.getElementById('m-color').value=color; const wheel=document.getElementById('m-color-wheel'); if(wheel)wheel.value=color; document.querySelectorAll('#color-picker .color-btn').forEach(b=>{b.style.borderColor=b.dataset.color===color?'var(--text)':'transparent';b.style.transform=b.dataset.color===color?'scale(1.15)':''}) }
+window.submitProject = () => { const name=document.getElementById('m-name').value.trim(),client=document.getElementById('m-client').value.trim(),color=document.getElementById('m-color').value; if(!name)return; DB.projects.push({id:uid(),name,client,color,status:'active'}); save(); closeModal(); render() }
+
+function pickDistinctColor(palette) {
+  const usedColors = DB.projects.map(p=>p.color.toLowerCase())
+  if(usedColors.length===0) return palette[0]
+  const available = palette.filter(c=>!usedColors.includes(c.toLowerCase()))
+  if(available.length>0) return available[0]
+  // All palette colors used — pick a hue maximally distant from existing
+  const usedHues = usedColors.map(c=>hexToHsl(c)[0])
+  let bestHue=0, bestDist=0
+  for(let h=0;h<360;h+=15){ const minDist=Math.min(...usedHues.map(uh=>Math.min(Math.abs(h-uh),360-Math.abs(h-uh)))); if(minDist>bestDist){bestDist=minDist;bestHue=h} }
+  return hslToHex(bestHue,70,50)
+}
+
+function hexToHsl(hex) {
+  let r=parseInt(hex.slice(1,3),16)/255, g=parseInt(hex.slice(3,5),16)/255, b=parseInt(hex.slice(5,7),16)/255
+  const max=Math.max(r,g,b), min=Math.min(r,g,b), l=(max+min)/2
+  let h=0, s=0
+  if(max!==min){ const d=max-min; s=l>0.5?d/(2-max-min):d/(max+min); if(max===r)h=((g-b)/d+(g<b?6:0))*60; else if(max===g)h=((b-r)/d+2)*60; else h=((r-g)/d+4)*60 }
+  return [h,s*100,l*100]
+}
+
+function hslToHex(h,s,l) {
+  s/=100; l/=100
+  const a=s*Math.min(l,1-l), f=n=>{const k=(n+h/30)%12; return l-a*Math.max(Math.min(k-3,9-k,1),-1)}
+  const toHex=x=>Math.round(x*255).toString(16).padStart(2,'0')
+  return `#${toHex(f(0))}${toHex(f(8))}${toHex(f(4))}`
+}
+
+function buildEditProjectModal(projectId) {
+  const proj = DB.projects.find(p=>p.id===projectId)
+  if(!proj) return ''
+  const colors = ['#4f46e5','#0891b2','#16a34a','#ca8a04','#dc2626','#9333ea','#e11d48','#0d9488','#d97706','#6366f1','#ec4899','#14b8a6']
+  const currentColor = proj.color
+  return `<div class="modal-box" onclick="event.stopPropagation()">
+    <h3 class="text-lg font-semibold mb-4">Edit Project</h3>
+    <input type="hidden" id="m-epid" value="${proj.id}">
+    <form onsubmit="event.preventDefault();submitEditProject()">
+      <div class="space-y-3">
+        <div><label class="text-xs font-medium block mb-1">Client</label><input class="input" id="m-client" value="${esc(proj.client)}" placeholder="Client" autocomplete="off"></div>
+        <div><label class="text-xs font-medium block mb-1">Project Name</label><input class="input" id="m-name" value="${esc(proj.name)}" placeholder="Project name" required autocomplete="off"></div>
+        <div class="flex gap-2 flex-wrap items-center" id="color-picker">
+          ${colors.map(c=>`<button type="button" class="w-7 h-7 rounded-full border-2 hover:scale-110 transition-transform color-btn" style="background:${c};border-color:${c===currentColor?'var(--text)':'transparent'};${c===currentColor?'transform:scale(1.15)':''}" data-color="${c}" onclick="pickColor('${c}')"></button>`).join('')}
+          <label class="w-7 h-7 rounded-full border-2 border-dashed hover:scale-110 transition-transform cursor-pointer relative" style="border-color:var(--border)" title="Custom color">
+            <input type="color" id="m-color-wheel" value="${currentColor}" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="pickColor(this.value)">
+            <span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;pointer-events:none">🎨</span>
+          </label>
+        </div>
+        <input type="hidden" id="m-color" value="${currentColor}">
+      </div>
+      <div class="flex justify-between mt-5">
+        <div class="flex gap-2">
+          <button type="button" class="btn" style="color:var(--danger);border-color:var(--danger)" onclick="confirmDeleteProject('${proj.id}');closeModal()">Delete</button>
+          <button type="button" class="btn" onclick="archiveProject('${proj.id}');closeModal()">Archive</button>
+        </div>
+        <div class="flex gap-2"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>
+      </div>
+    </form>
+  </div>`
+}
+window.submitEditProject = () => { const id=document.getElementById('m-epid').value,name=document.getElementById('m-name').value.trim(),client=document.getElementById('m-client').value.trim(),color=document.getElementById('m-color').value; if(!name)return; const p=DB.projects.find(x=>x.id===id); if(p){p.name=name;p.client=client;p.color=color}; save(); closeModal(); render() }
+
+function buildTemplateModal() {
+  return `<div class="modal-box" onclick="event.stopPropagation()">
+    <h3 class="text-lg font-semibold mb-4">New Task Template</h3>
+    <form onsubmit="event.preventDefault();submitTemplate()">
+      <div class="space-y-3">
+        <input class="input" id="m-tname" placeholder="Template name" required autocomplete="off">
+      </div>
+      <div class="flex justify-end gap-2 mt-5">
+        <button type="button" class="btn" onclick="closeModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Create</button>
+      </div>
+    </form>
+  </div>`
+}
+window.submitTemplate = () => { const name=document.getElementById('m-tname').value.trim(); if(!name)return; DB.templates.push({id:uid(),name,tags:[]}); save(); closeModal(); render() }
+
+function buildEditModal(entryId) {
+  const entry = DB.entries.find(e=>e.id===entryId)
+  if(!entry) return ''
+  const entryProj = DB.projects.find(p=>p.id===entry.projectId)
+  const clients = [...new Set(DB.projects.map(p=>p.client).filter(Boolean))]
+  const currentClient = entryProj?.client||''
+  return `<div class="modal-box" onclick="event.stopPropagation()">
+    <h3 class="text-lg font-semibold mb-4">Edit Entry</h3>
+    <input type="hidden" id="m-eid" value="${entry.id}">
+    <form onsubmit="event.preventDefault();submitEdit()">
+      <div class="space-y-3">
+        <div><label class="text-xs font-medium block mb-1">Client</label><select class="input" id="m-eclient" onchange="filterProjectsByClient(this.value)">${['',  ...clients].map(c=>`<option value="${esc(c)}" ${c===currentClient?'selected':''}>${c||'— All Clients —'}</option>`).join('')}</select></div>
+        <div><label class="text-xs font-medium block mb-1">Project</label><select class="input" id="m-eproj">${DB.projects.filter(p=>p.status==='active').map(p=>`<option value="${p.id}" ${p.id===entry.projectId?'selected':''}>${esc(p.name)}</option>`).join('')}</select></div>
+        <div><label class="text-xs font-medium block mb-1">Task</label><select class="input" id="m-etask">${DB.templates.map(t=>`<option value="${t.id}" ${t.id===entry.taskTemplateId?'selected':''}>${esc(t.name)}</option>`).join('')}</select></div>
+        <div class="grid grid-cols-2 gap-2">
+          <div><label class="text-xs font-medium block mb-1">Start</label><input type="time" class="input" id="m-estart" value="${mToTime(entry.startMinutes)}"></div>
+          <div><label class="text-xs font-medium block mb-1">End</label><input type="time" class="input" id="m-eend" value="${mToTime(entry.endMinutes)}"></div>
+        </div>
+        <div><label class="text-xs font-medium block mb-1">Notes</label><input class="input" id="m-enotes" value="${esc(entry.notes)}" placeholder="Add notes..."></div>
+      </div>
+      <div class="flex justify-between mt-5">
+        <button type="button" class="btn" style="color:var(--danger);border-color:var(--danger)" onclick="deleteFromModal()">Delete</button>
+        <div class="flex gap-2"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>
+      </div>
+    </form>
+  </div>`
+}
+window.filterProjectsByClient = (client) => {
+  const sel = document.getElementById('m-eproj'); if(!sel) return
+  const projects = client ? DB.projects.filter(p=>p.client===client&&p.status==='active') : DB.projects.filter(p=>p.status==='active')
+  sel.innerHTML = projects.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')
+}
+window.submitEdit = () => { const id=document.getElementById('m-eid').value; updateEntry(id,{projectId:document.getElementById('m-eproj').value,taskTemplateId:document.getElementById('m-etask').value,startMinutes:timeToM(document.getElementById('m-estart').value),endMinutes:timeToM(document.getElementById('m-eend').value),notes:document.getElementById('m-enotes').value,tags:[]}); closeModal(); render() }
+window.deleteFromModal = () => { deleteEntryById(document.getElementById('m-eid').value); closeModal(); render() }
+
+// ═══════════════════════════════════════════════════════════════
+// CONTEXT MENU
+// ═══════════════════════════════════════════════════════════════
+function showCtxMenu(x, y, entryId) {
+  closeCtxMenu()
+  const div = document.createElement('div')
+  div.className = 'ctx-menu'; div.id = 'ctx-menu'
+  div.style.left = Math.min(x, window.innerWidth-150)+'px'
+  div.style.top = Math.min(y, window.innerHeight-80)+'px'
+  div.innerHTML = `<button onclick="closeCtxMenu();showModal('edit','${entryId}')">✏️ Edit</button><button class="danger" onclick="closeCtxMenu();deleteEntryById('${entryId}');render()">🗑️ Delete</button>`
+  document.body.appendChild(div)
+  setTimeout(()=>document.addEventListener('pointerdown', closeCtxOnOutside, {once:true}), 10)
+}
+function closeCtxOnOutside(e) { if(!e.target.closest('#ctx-menu')) closeCtxMenu() }
+function closeCtxMenu() { document.getElementById('ctx-menu')?.remove() }
+window.closeCtxMenu = closeCtxMenu
+window.deleteEntryById = deleteEntryById
+
+// ═══════════════════════════════════════════════════════════════
+// EXPORT DIALOG
+// ═══════════════════════════════════════════════════════════════
+let expState = null
+
+function expDefault() {
+  return { fileType:'pdf', outputBy:'daterange', preset:'today', startDate:toISO(new Date()), endDate:toISO(new Date()), selectedProjects:new Set(), selectedClients:new Set(), lastClickedIdx:null, groupByClient:false }
+}
+
+function expPresetDates(preset) {
+  const today = new Date()
+  if(preset==='today') return { start:toISO(today), end:toISO(today) }
+  if(preset==='thisweek'){ const ws=startOfWeek(today); return { start:toISO(ws), end:toISO(addDays(ws,6)) } }
+  if(preset==='thismonth'){ const ms=new Date(today.getFullYear(),today.getMonth(),1),me=new Date(today.getFullYear(),today.getMonth()+1,0); return { start:toISO(ms), end:toISO(me) } }
+  if(preset==='all'){ const dates=DB.entries.map(e=>e.date).sort(); return { start:dates[0]||toISO(today), end:dates[dates.length-1]||toISO(today) } }
+  return null
+}
+
+function expIsValid() {
+  if(expState.outputBy==='daterange') return expState.startDate && expState.endDate && expState.startDate<=expState.endDate
+  if(expState.outputBy==='client') return expState.selectedClients.size>0
+  return expState.selectedProjects.size>0
+}
+
+function expGetError() {
+  if(expState.outputBy==='daterange'){
+    if(!expState.startDate||!expState.endDate) return 'Please enter both dates'
+    if(expState.startDate>expState.endDate) return 'Start date must be before end date'
+  }
+  return ''
+}
+
+window.openExportDialog = () => {
+  expState = expDefault()
+  const div = document.createElement('div')
+  div.className = 'modal-bg'; div.id = 'export-modal'
+  div.addEventListener('mousedown', e=>{ if(e.target===div) closeExportDialog() })
+  document.body.appendChild(div)
+  renderExportDialog()
+}
+
+window.closeExportDialog = () => { document.getElementById('export-modal')?.remove(); expState=null }
+
+function renderExportDialog() {
+  const modal = document.getElementById('export-modal')
+  if(!modal||!expState) return
+  const err = expGetError()
+  const valid = expIsValid()
+
+  let content = `<div class="modal-box export-dialog" onclick="event.stopPropagation()">
+    <h3 class="text-lg font-semibold mb-4" style="text-align:center">Export</h3>
+    <div class="exp-row">
+      <label>File Type:</label>
+      <div class="exp-radio-group">
+        <label class="exp-radio-opt"><input type="radio" name="exp-ft" value="pdf" ${expState.fileType==='pdf'?'checked':''} onchange="expSetFileType('pdf')"> PDF</label>
+        <label class="exp-radio-opt"><input type="radio" name="exp-ft" value="csv" ${expState.fileType==='csv'?'checked':''} onchange="expSetFileType('csv')"> CSV</label>
+      </div>
+    </div>
+    <div class="exp-row">
+      <label>Output by:</label>
+      <div class="exp-radio-group">
+        <label class="exp-radio-opt"><input type="radio" name="exp-ob" value="project" ${expState.outputBy==='project'?'checked':''} onchange="expSetOutputBy('project')"> Project</label>
+        <label class="exp-radio-opt"><input type="radio" name="exp-ob" value="client" ${expState.outputBy==='client'?'checked':''} onchange="expSetOutputBy('client')"> Client</label>
+        <label class="exp-radio-opt"><input type="radio" name="exp-ob" value="daterange" ${expState.outputBy==='daterange'?'checked':''} onchange="expSetOutputBy('daterange')"> Date Range</label>
+      </div>
+    </div>`
+
+  if(expState.outputBy==='client') {
+    const clientsWithEntries = [...new Set(DB.projects.filter(p=>DB.entries.some(e=>e.projectId===p.id)).map(p=>p.client||'(No Client)'))]
+    const count = expState.selectedClients.size
+    const allSelected = count === clientsWithEntries.length && clientsWithEntries.length>0
+    content += `<div class="exp-list-header">
+      <span class="exp-hint ${count>0?'active':''}">${count>0?count+' client'+(count>1?'s':'')+' selected':'Select one or more clients'}</span>
+      <button onclick="expToggleAllClients()">${allSelected?'Deselect All':'Select All'}</button>
+    </div>
+    <div class="exp-project-list" id="exp-client-list">
+      ${clientsWithEntries.map((c,i)=>{
+        const sel=expState.selectedClients.has(c)
+        return `<div class="exp-project-item ${sel?'selected':''}" data-idx="${i}" onclick="expClickClient(event,${i},'${esc(c).replace(/'/g,"\\'")}')"> 
+          <span class="exp-check">\u2713</span>
+          <span style="width:10px;height:10px;border-radius:50%;flex-shrink:0;background:var(--primary)"></span>
+          ${esc(c)}
+        </div>`
+      }).join('')}
+      ${clientsWithEntries.length===0?'<p style="padding:12px;text-align:center;color:var(--muted);font-size:12px">No clients with entries</p>':''}
+    </div>
+    <p class="exp-shortcut-hint">Click to select \u00b7 Shift+click to select range</p>`
+  } else if(expState.outputBy==='daterange') {
+    content += `<div class="exp-presets">
+      ${['today','thisweek','thismonth','all'].map(p=>{
+        const labels={today:'Today',thisweek:'This Week',thismonth:'This Month',all:'All'}
+        return `<button class="exp-preset-btn ${expState.preset===p?'active':''}" onclick="expSetPreset('${p}')">${labels[p]}</button>`
+      }).join('')}
+    </div>
+    <div class="exp-date-row">
+      <div class="exp-date-field"><label>Start Date</label><input type="date" id="exp-start" value="${expState.startDate}" class="${err?'exp-error':''}" onchange="expSetStartDate(this.value)"></div>
+      <div class="exp-date-field"><label>End Date</label><input type="date" id="exp-end" value="${expState.endDate}" class="${err?'exp-error':''}" onchange="expSetEndDate(this.value)"></div>
+    </div>
+    <p class="exp-error-msg">${err}</p>`
+  } else {
+    let expProjects = DB.projects.filter(p=>DB.entries.some(e=>e.projectId===p.id))
+    if(expState.groupByClient) expProjects=[...expProjects].sort((a,b)=>(a.client||'').localeCompare(b.client||''))
+    const count = expState.selectedProjects.size
+    const allSelected = count === expProjects.length && expProjects.length>0
+    content += `<div class="exp-list-header">
+      <span class="exp-hint ${count>0?'active':''}">${count>0?count+' project'+(count>1?'s':'')+' selected':'Select one or more projects'}</span>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button onclick="expToggleGroupByClient()" class="exp-preset-btn ${expState.groupByClient?'active':''}" style="font-size:11px;padding:2px 8px">Group by Client</button>
+        <button onclick="expToggleAll()">${allSelected?'Deselect All':'Select All'}</button>
+      </div>
+    </div>
+    <div class="exp-project-list" id="exp-project-list">
+      ${expProjects.map((p,i)=>{
+        const sel=expState.selectedProjects.has(p.id)
+        return `<div class="exp-project-item ${sel?'selected':''}" data-idx="${i}" data-id="${p.id}" onclick="expClickProject(event,${i},'${p.id}')">
+          <span class="exp-check">✓</span>
+          <span style="width:10px;height:10px;border-radius:50%;flex-shrink:0;background:${p.color}"></span>
+          <span style="flex:1">${esc(p.name)}</span>
+          ${p.client?`<span style="font-size:11px;color:var(--muted);opacity:.7">${esc(p.client)}</span>`:''}
+        </div>`
+      }).join('')}
+      ${expProjects.length===0?'<p style="padding:12px;text-align:center;color:var(--muted);font-size:12px">No projects with entries</p>':''}
+    </div>
+    <p class="exp-shortcut-hint">Click to select · Shift+click to select range</p>`
+  }
+
+  content += `<div style="display:flex;gap:10px;justify-content:center;margin-top:12px">
+      <button class="btn" onclick="closeExportDialog()">Cancel</button>
+      <button class="btn btn-primary" ${valid?'':'disabled'} onclick="expDoOutput()">Output</button>
+    </div>
+  </div>`
+
+  modal.innerHTML = content
+}
+
+window.expSetFileType = (v) => { expState.fileType=v; renderExportDialog() }
+window.expSetOutputBy = (v) => { expState.outputBy=v; renderExportDialog() }
+window.expToggleGroupByClient = () => { expState.groupByClient=!expState.groupByClient; renderExportDialog() }
+window.expSetPreset = (p) => { expState.preset=p; const d=expPresetDates(p); if(d){expState.startDate=d.start;expState.endDate=d.end}; renderExportDialog() }
+window.expSetStartDate = (v) => { expState.startDate=v; expState.preset=null; renderExportDialog() }
+window.expSetEndDate = (v) => { expState.endDate=v; expState.preset=null; renderExportDialog() }
+window.expToggleAll = () => { let expProjects=DB.projects.filter(p=>DB.entries.some(e=>e.projectId===p.id)); if(expState.groupByClient) expProjects=[...expProjects].sort((a,b)=>(a.client||'').localeCompare(b.client||'')); if(expState.selectedProjects.size===expProjects.length) expState.selectedProjects.clear(); else expProjects.forEach(p=>expState.selectedProjects.add(p.id)); renderExportDialog() }
+window.expClickProject = (e, idx, id) => {
+  let expProjects=DB.projects.filter(p=>DB.entries.some(e=>e.projectId===p.id))
+  if(expState.groupByClient) expProjects=[...expProjects].sort((a,b)=>(a.client||'').localeCompare(b.client||''))
+  if(e.shiftKey && expState.lastClickedIdx!==null) {
+    const start=Math.min(expState.lastClickedIdx,idx), end=Math.max(expState.lastClickedIdx,idx)
+    for(let i=start;i<=end;i++) expState.selectedProjects.add(expProjects[i].id)
+  } else {
+    if(expState.selectedProjects.has(id)) expState.selectedProjects.delete(id); else expState.selectedProjects.add(id)
+    expState.lastClickedIdx = idx
+  }
+  renderExportDialog()
+}
+window.expToggleAllClients = () => { const clients=[...new Set(DB.projects.filter(p=>DB.entries.some(e=>e.projectId===p.id)).map(p=>p.client||'(No Client)'))]; if(expState.selectedClients.size===clients.length) expState.selectedClients.clear(); else clients.forEach(c=>expState.selectedClients.add(c)); renderExportDialog() }
+window.expClickClient = (e, idx, name) => {
+  const clients=[...new Set(DB.projects.filter(p=>DB.entries.some(e=>e.projectId===p.id)).map(p=>p.client||'(No Client)'))]
+  if(e.shiftKey && expState.lastClickedIdx!==null) {
+    const start=Math.min(expState.lastClickedIdx,idx), end=Math.max(expState.lastClickedIdx,idx)
+    for(let i=start;i<=end;i++) expState.selectedClients.add(clients[i])
+  } else {
+    if(expState.selectedClients.has(name)) expState.selectedClients.delete(name); else expState.selectedClients.add(name)
+    expState.lastClickedIdx = idx
+  }
+  renderExportDialog()
+}
+
+window.expDoOutput = () => {
+  if(!expIsValid()) return
+  let filtered
+  let filenameSuffix = ''
+  if(expState.outputBy==='daterange') {
+    filtered = DB.entries.filter(e=>e.date>=expState.startDate && e.date<=expState.endDate)
+    const [,sm,sd]=expState.startDate.split('-')
+    const [,em,ed]=expState.endDate.split('-')
+    filenameSuffix = `-${parseInt(sm)}-${parseInt(sd)}-to-${parseInt(em)}-${parseInt(ed)}`
+  } else if(expState.outputBy==='client') {
+    const clientProjectIds = DB.projects.filter(p=>expState.selectedClients.has(p.client||'(No Client)')).map(p=>p.id)
+    filtered = DB.entries.filter(e=>clientProjectIds.includes(e.projectId))
+    const names=[...expState.selectedClients]
+    filenameSuffix = names.length===1?`-${names[0].toLowerCase().replace(/\s+/g,'-')}`:`-${names.length}-clients`
+  } else {
+    filtered = DB.entries.filter(e=>expState.selectedProjects.has(e.projectId))
+    const names=DB.projects.filter(p=>expState.selectedProjects.has(p.id)).map(p=>p.name)
+    filenameSuffix = names.length===1?`-${names[0].toLowerCase().replace(/\s+/g,'-')}`:`-${names.length}-projects`
+  }
+  if(expState.fileType==='csv') doExportCSV(filtered, filenameSuffix)
+  else doExportPDF(filtered, filenameSuffix)
+  closeExportDialog()
+}
+
+function doExportCSV(entries, suffix) {
+  const sorted=[...entries].sort((a,b)=>a.date.localeCompare(b.date)||a.startMinutes-b.startMinutes)
+  const rows = [['=== DETAIL ==='],['Date','Project','Client','Task','Start','End','Duration (min)','Notes','Tags']]
+  sorted.forEach(e=>{ const p=DB.projects.find(x=>x.id===e.projectId),t=DB.templates.find(x=>x.id===e.taskTemplateId); rows.push([e.date,p?.name||'',p?.client||'',t?.name||'',mToTime(e.startMinutes),mToTime(e.endMinutes),e.endMinutes-e.startMinutes,e.notes,e.tags.join('; ')]) })
+  rows.push([],[],['=== SUMMARY BY PROJECT ==='],['Project','Client','Total Hours'])
+  const projTotals = new Map()
+  sorted.forEach(e=>{ const p=DB.projects.find(x=>x.id===e.projectId); const key=p?.id||'unknown'; if(!projTotals.has(key)) projTotals.set(key,{name:p?.name||'?',client:p?.client||'',mins:0,tasks:new Map()}); const pt=projTotals.get(key); pt.mins+=e.endMinutes-e.startMinutes; const t=DB.templates.find(x=>x.id===e.taskTemplateId); pt.tasks.set(t?.name||'?',(pt.tasks.get(t?.name||'?')||0)+(e.endMinutes-e.startMinutes)) })
+  for(const[,v] of projTotals) rows.push([v.name,v.client,(v.mins/60).toFixed(2)])
+  rows.push([],[],['=== TASKS PER PROJECT ==='],['Project','Task','Total Hours'])
+  for(const[,v] of projTotals){ for(const[task,mins] of v.tasks) rows.push([v.name,task,(mins/60).toFixed(2)]) }
+  const csv = rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n')
+  dl(csv, `time-report${suffix}-${toISO(new Date())}.csv`, 'text/csv')
+}
+
+function doExportPDF(entries, suffix) {
+  const sorted=[...entries].sort((a,b)=>a.date.localeCompare(b.date)||a.startMinutes-b.startMinutes)
+  const projTotals=new Map()
+  sorted.forEach(e=>{ const p=DB.projects.find(x=>x.id===e.projectId); const key=p?.name||'?'; if(!projTotals.has(key)) projTotals.set(key,{mins:0,tasks:new Map()}); const pt=projTotals.get(key); pt.mins+=e.endMinutes-e.startMinutes; const t=DB.templates.find(x=>x.id===e.taskTemplateId); pt.tasks.set(t?.name||'?',(pt.tasks.get(t?.name||'?')||0)+(e.endMinutes-e.startMinutes)) })
+  let html=`<!DOCTYPE html><html><head><title>Time Report</title><style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:40px;max-width:900px;margin:auto;color:#333}table{width:100%;border-collapse:collapse;margin:12px 0}th,td{border:1px solid #ddd;padding:8px 12px;font-size:13px;text-align:left}th{background:#f7f7f8;font-size:11px;text-transform:uppercase;font-weight:600;color:#555}h1{font-size:20px;margin-bottom:4px}h2{font-size:15px;margin-top:28px;color:#444}.meta{color:#888;font-size:12px;margin-bottom:20px}tr:nth-child(even){background:#fafafa}@media print{body{padding:20px}}</style></head><body>`
+  html+=`<h1>Time Report</h1><p class="meta">Generated ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</p>`
+  const grandTotal=[...projTotals.values()].reduce((s,v)=>s+v.mins,0)
+  html+=`<h2>Summary (${fmtDur(grandTotal)} total)</h2><table><tr><th>Project</th><th>Hours</th><th>Tasks</th></tr>`
+  for(const[name,v] of projTotals){ const taskList=[...v.tasks.entries()].map(([t,m])=>`${t} (${fmtDur(m)})`).join(', '); html+=`<tr><td><strong>${esc(name)}</strong></td><td>${(v.mins/60).toFixed(2)}h</td><td style="font-size:12px;color:#666">${esc(taskList)}</td></tr>` }
+  html+=`</table><h2>Detail</h2><table><tr><th>Date</th><th>Project</th><th>Task</th><th>Time</th><th>Duration</th><th>Notes</th></tr>`
+  sorted.forEach(e=>{ const p=DB.projects.find(x=>x.id===e.projectId),t=DB.templates.find(x=>x.id===e.taskTemplateId); html+=`<tr><td>${e.date}</td><td>${esc(p?.name||'')}</td><td>${esc(t?.name||'')}</td><td>${mToTime(e.startMinutes)}–${mToTime(e.endMinutes)}</td><td>${fmtDur(e.endMinutes-e.startMinutes)}</td><td style="font-size:12px;color:#666">${esc(e.notes)}</td></tr>` })
+  html+=`</table></body></html>`
+  const exportDate = toISO(new Date())
+  dl(html, `time-report${suffix}-${exportDate}.html`, 'text/html')
+}
+
+window.exportConfig = () => { dl(JSON.stringify({projects:DB.projects,templates:DB.templates,entries:DB.entries,preferences:{theme:DB.theme,view:DB.view}},null,2),'time-tracker-config.json','application/json') }
+window.importConfig = () => { const inp=document.createElement('input');inp.type='file';inp.accept='.json'; inp.onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{const cfg=JSON.parse(await f.text());if(cfg.projects)DB.projects=cfg.projects;if(cfg.templates)DB.templates=cfg.templates;if(cfg.entries)DB.entries=cfg.entries;if(cfg.preferences){DB.theme=cfg.preferences.theme||'light';DB.view=cfg.preferences.view||'week';document.documentElement.classList.toggle('dark',DB.theme==='dark')};save();render()}catch{alert('Invalid config file')}}; inp.click() }
+function dl(content,name,type){const b=new Blob([content],{type});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
+
+// ═══════════════════════════════════════════════════════════════
+// TIMER (with auto-save and auto-stop)
+// ═══════════════════════════════════════════════════════════════
+let timerStart = null, timerInterval = null
+
+function loadTimerState() {
+  try {
+    const saved = localStorage.getItem(TIMER_KEY)
+    if(saved) {
+      const t = JSON.parse(saved)
+      timerStart = t.start
+      if(t.projectId) DB.selProject = t.projectId
+      if(t.templateId) DB.selTemplate = t.templateId
+      timerInterval = setInterval(updateTimerDisplay, 1000)
+    }
+  } catch{}
+}
+function saveTimerState() {
+  if(timerStart) localStorage.setItem(TIMER_KEY, JSON.stringify({start:timerStart, projectId:DB.selProject, templateId:DB.selTemplate}))
+  else localStorage.removeItem(TIMER_KEY)
+}
+
+window.startTimer = () => {
+  if(!DB.selProject || !DB.selTemplate) return alert('Select a project and task first.')
+  timerStart = Date.now()
+  saveTimerState()
+  timerInterval = setInterval(updateTimerDisplay, 1000)
+  render()
+}
+window.stopTimer = () => {
+  if(!timerStart) return
+  const startDate = new Date(timerStart), endDate = new Date()
+  const date = toISO(startDate)
+  const startMin = startDate.getHours()*60 + startDate.getMinutes()
+  let endMin = endDate.getHours()*60 + endDate.getMinutes()
+  // Cap at midnight
+  endMin = Math.min(endMin, 23*60+59)
+  if(endMin - startMin >= 1) {
+    addEntry({ projectId:DB.selProject, taskTemplateId:DB.selTemplate, date, startMinutes:startMin, endMinutes:endMin })
+  }
+  clearInterval(timerInterval); timerInterval = null; timerStart = null
+  saveTimerState()
+  render()
+}
+
+function updateTimerDisplay() {
+  if(!timerStart) return
+  const now = Date.now()
+  const elapsedMs = now - timerStart
+  const elapsedMins = elapsedMs / 60000
+
+  // Auto-stop: 8 hours or 11:59pm
+  const nowDate = new Date()
+  const nowMins = nowDate.getHours() * 60 + nowDate.getMinutes()
+  if(elapsedMins >= MAX_TIMER_MINS || nowMins >= 23*60+59) {
+    stopTimer()
+    return
+  }
+
+  const elapsed = Math.floor(elapsedMs / 1000)
+  const h = Math.floor(elapsed/3600), m = Math.floor((elapsed%3600)/60), s = elapsed%60
+  const el = document.getElementById('timer-display')
+  if(el) el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+}
+
+// ═══════════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════════
+if(!DB.panelsCollapsed) DB.panelsCollapsed = {}
+if(DB.filterProject === undefined) DB.filterProject = false
+document.documentElement.classList.toggle('dark', DB.theme==='dark')
+loadTimerState()
+window.addEventListener('beforeunload', e => { if(histStack.length||timerStart){e.preventDefault();e.returnValue=''} })
+render()
+</script>
+</body>
+</html>
