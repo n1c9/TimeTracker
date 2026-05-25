@@ -8,6 +8,8 @@ Desktop.ini
 *.swp
 *.swo
 *~
+ARCHIVE/
+files.zip
 
 # Node (if anyone runs npx serve)
 node_modules/
