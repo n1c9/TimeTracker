@@ -92,7 +92,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .shortcuts-modal .shortcut-key{font-family:ui-monospace,monospace;font-size:12px;background:var(--surface-alt);border:1px solid var(--border);border-radius:4px;padding:2px 8px;text-align:center;font-weight:500}
 .shortcuts-modal .shortcut-desc{font-size:13px;color:var(--text);display:flex;align-items:center}
 
-/* Summary bar chart */
+/* CSV Import dialog */
+.csv-import-modal{max-width:560px;width:100%}
+.csv-tab-bar{display:flex;border-bottom:1px solid var(--border);margin-bottom:16px}
+.csv-tab{padding:7px 16px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:none;color:var(--text-muted);border-bottom:2px solid transparent;margin-bottom:-1px}
+.csv-tab.active{color:var(--primary);border-bottom-color:var(--primary)}
+.csv-drop-zone{border:2px dashed var(--border);border-radius:8px;padding:28px 16px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s}
+.csv-drop-zone:hover,.csv-drop-zone.dragover{border-color:var(--primary);background:color-mix(in srgb,var(--primary) 5%,transparent)}
+.csv-preview-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+.csv-preview-table th{background:var(--surface-alt);padding:5px 8px;text-align:left;font-weight:600;border:1px solid var(--border);font-size:11px;text-transform:uppercase;color:var(--text-muted)}
+.csv-preview-table td{padding:5px 8px;border:1px solid var(--border);color:var(--text)}
+.csv-preview-table tr:nth-child(even) td{background:var(--surface-alt)}
+.csv-error{color:var(--danger);font-size:12px;font-weight:500;margin-top:8px}
+.csv-merge-opts{display:flex;gap:16px;margin-top:12px;font-size:13px}
+.csv-merge-opts label{display:flex;align-items:center;gap:5px;cursor:pointer}
 .summary-chart{display:flex;align-items:flex-end;gap:3px;height:40px;padding:4px 0}
 .summary-chart .chart-bar{flex:1;min-width:0;border-radius:3px 3px 0 0;transition:height .2s;position:relative}
 .summary-chart .chart-bar:hover::after{content:attr(data-label);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:10px;white-space:nowrap;background:var(--text);color:var(--surface);padding:2px 6px;border-radius:3px;margin-bottom:2px}
@@ -131,7 +144,11 @@ function loadDB() {
   try { const r=localStorage.getItem(LS_KEY); if(r) return JSON.parse(r) } catch{}
   return { projects:[], templates:[], entries:[], theme:'light', view:'week', currentDate:toISO(new Date()), selProject:null, selTemplate:null, sidebarCollapsed:false, panelsCollapsed:{}, filterProject:false, snapToGrid:true }
 }
-function save() { localStorage.setItem(LS_KEY, JSON.stringify(DB)) }
+function save() {
+  DB.lastSaved = Date.now()
+  localStorage.setItem(LS_KEY, JSON.stringify(DB))
+  updateLastSavedDisplay()
+}
 
 // History
 let histStack=[], futureStack=[]
@@ -215,7 +232,7 @@ function layoutEntries(entries) {
       for(let c=0;c<cols.length;c++){ if(cols[c].endMinutes<=e.startMinutes){cols[c]=e;map.set(e.id,{col:c,total:0});placed=true;break} }
       if(!placed){cols.push(e);map.set(e.id,{col:cols.length-1,total:0})}
     }
-    const total=cols.length+1
+    const total=cols.length+0.35
     for(const e of g){const m=map.get(e.id);if(m)m.total=total}
   }
   return map
@@ -455,9 +472,20 @@ function buildSidebar() {
         </div>
         ${eCollapsed?'':`<div class="space-y-2">
           <button class="btn btn-sm w-full" onclick="openExportDialog()">📄 Export</button>
+          <button class="btn btn-sm w-full" onclick="openCsvImportDialog()">📥 Import from CSV</button>
           <div class="flex gap-2">
-            <button class="btn btn-sm flex-1" onclick="exportConfig()">💾 Save</button>
-            <button class="btn btn-sm flex-1" onclick="importConfig()">📂 Load</button>
+            <button class="btn btn-sm flex-1" onclick="exportConfig()">💾 Backup</button>
+            <button class="btn btn-sm flex-1" onclick="importConfig()">📂 Restore</button>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 2px">
+            <span style="font-size:12px;font-weight:500;color:var(--text)">Auto-backup (5 min)</span>
+            <button onclick="toggleAutosave()" role="switch" aria-checked="${!!DB.autosave}" style="position:relative;width:36px;height:20px;border-radius:10px;border:none;cursor:pointer;transition:background .2s;background:${DB.autosave?'var(--primary)':'var(--border)'}">
+              <span style="position:absolute;top:2px;left:${DB.autosave?'18px':'2px'};width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.25)"></span>
+            </button>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);padding:0 2px;line-height:1.7">
+            <div style="display:flex;justify-content:space-between"><span>Last saved:</span><span id="last-saved-ts" style="font-variant-numeric:tabular-nums">${DB.lastSaved?new Date(DB.lastSaved).toTimeString().slice(0,8):'Never'}</span></div>
+            ${DB.autosave?`<div style="display:flex;justify-content:space-between"><span>Last backup:</span><span id="last-autosave-ts" style="font-variant-numeric:tabular-nums">${DB.lastAutosave?new Date(DB.lastAutosave).toTimeString().slice(0,8):'Not yet'}</span></div>`:''}
           </div>
           <button class="btn btn-sm w-full" onclick="clearWeek()" style="color:var(--danger);border-color:var(--danger)">🗑️ Clear Week</button>
         </div>`}
@@ -503,7 +531,7 @@ function buildDayCol(dateStr, showHeader) {
       ${DISPLAY_HOURS.map((h,i)=>`<div class="absolute w-full half-line" style="top:${i*HOUR_H+HOUR_H/2}px"></div><div class="quarter-line" style="top:${i*HOUR_H+HOUR_H/4}px"></div><div class="quarter-line" style="top:${i*HOUR_H+HOUR_H*3/4}px"></div>`).join('')}
       ${isToday && nowMin >= START_HOUR*60 ?`<div class="now-line" style="top:${((nowMin-START_HOUR*60)/60)*HOUR_H}px"><div class="now-dot"></div></div>`:''}
       ${entries.map(entry=>{
-        const info=layout.get(entry.id)||{col:0,total:2}
+        const info=layout.get(entry.id)||{col:0,total:1.35}
         const top=((entry.startMinutes-START_HOUR*60)/60)*HOUR_H
         const height=Math.max(((entry.endMinutes-entry.startMinutes)/60)*HOUR_H, 15)
         const w=(1/info.total*100)+'%'
@@ -858,21 +886,91 @@ window.closeSidebar = ()=>{
   sb.classList.add('hidden'); sb.classList.remove('flex'); sb.style.position=''; ov.style.display='none'
 }
 
+// ── Reusable confirm/alert modal (replaces browser confirm() / alert()) ──
+function showConfirmModal({ title, message, confirmLabel = 'Delete', danger = true, onConfirm, onCancel }) {
+  const existing = document.getElementById('confirm-modal-root')
+  if (existing) existing.remove()
+  const div = document.createElement('div')
+  div.className = 'modal-bg'; div.id = 'confirm-modal-root'
+  const btnStyle = danger
+    ? 'background:var(--danger);color:#fff;border-color:var(--danger)'
+    : 'background:var(--primary);color:var(--primary-fg);border-color:var(--primary)'
+  div.innerHTML = `
+    <div class="modal-box" style="max-width:360px;text-align:center" onclick="event.stopPropagation()">
+      <div style="font-size:22px;margin-bottom:8px">${danger ? '⚠️' : 'ℹ️'}</div>
+      <h3 class="font-semibold text-sm mb-2">${esc(title)}</h3>
+      <p style="font-size:13px;color:var(--text-muted);margin-bottom:20px;line-height:1.5">${esc(message)}</p>
+      <div class="flex gap-2 justify-center">
+        <button class="btn" id="confirm-modal-cancel">${danger ? 'Cancel' : 'OK'}</button>
+        ${danger ? `<button class="btn" id="confirm-modal-ok" style="${btnStyle}">${esc(confirmLabel)}</button>` : ''}
+      </div>
+    </div>`
+  div.addEventListener('mousedown', e => { if (e.target === div) { div.remove(); onCancel?.() } })
+  document.body.appendChild(div)
+  div.querySelector('#confirm-modal-cancel').onclick = () => { div.remove(); onCancel?.() }
+  const okBtn = div.querySelector('#confirm-modal-ok')
+  if (okBtn) okBtn.onclick = () => { div.remove(); onConfirm?.() }
+  setTimeout(() => (okBtn || div.querySelector('#confirm-modal-cancel'))?.focus(), 50)
+}
+
 // Delete project: removes project + all its entries (orphan cleanup)
-window.confirmDeleteProject = (id)=>{ const p=DB.projects.find(x=>x.id===id); if(p&&confirm(`Delete "${p.name}" and all its entries?`)){ const removedEntries=DB.entries.filter(x=>x.projectId===id).map(x=>({...x})); pushHist({t:'delProject',project:{...p},entries:removedEntries}); DB.projects=DB.projects.filter(x=>x.id!==id); DB.entries=DB.entries.filter(x=>x.projectId!==id); if(DB.selProject===id) DB.selProject=null; save(); render() }}
+window.confirmDeleteProject = (id) => {
+  const p = DB.projects.find(x => x.id === id)
+  if (!p) return
+  const count = DB.entries.filter(x => x.projectId === id).length
+  showConfirmModal({
+    title: `Delete "${p.name}"?`,
+    message: `This will permanently delete the project and ${count} time ${count === 1 ? 'entry' : 'entries'}. This cannot be undone.`,
+    confirmLabel: 'Delete Project',
+    onConfirm: () => {
+      const removedEntries = DB.entries.filter(x => x.projectId === id).map(x => ({...x}))
+      pushHist({ t: 'delProject', project: {...p}, entries: removedEntries })
+      DB.projects = DB.projects.filter(x => x.id !== id)
+      DB.entries = DB.entries.filter(x => x.projectId !== id)
+      if (DB.selProject === id) DB.selProject = null
+      save(); render()
+    }
+  })
+}
 
 // Delete template: removes template + all entries using it (orphan cleanup)
-window.confirmDeleteTemplate = (id)=>{ const t=DB.templates.find(x=>x.id===id); if(t&&confirm(`Delete "${t.name}" and all entries using it?`)){ const removedEntries=DB.entries.filter(x=>x.taskTemplateId===id).map(x=>({...x})); pushHist({t:'delTemplate', template:{...t}, entries:removedEntries}); DB.templates=DB.templates.filter(x=>x.id!==id); DB.entries=DB.entries.filter(x=>x.taskTemplateId!==id); if(DB.selTemplate===id) DB.selTemplate=null; save(); render() }}
+window.confirmDeleteTemplate = (id) => {
+  const t = DB.templates.find(x => x.id === id)
+  if (!t) return
+  const count = DB.entries.filter(x => x.taskTemplateId === id).length
+  showConfirmModal({
+    title: `Delete task "${t.name}"?`,
+    message: `This will permanently delete the task and ${count} time ${count === 1 ? 'entry' : 'entries'} using it.`,
+    confirmLabel: 'Delete Task',
+    onConfirm: () => {
+      const removedEntries = DB.entries.filter(x => x.taskTemplateId === id).map(x => ({...x}))
+      pushHist({ t: 'delTemplate', template: {...t}, entries: removedEntries })
+      DB.templates = DB.templates.filter(x => x.id !== id)
+      DB.entries = DB.entries.filter(x => x.taskTemplateId !== id)
+      if (DB.selTemplate === id) DB.selTemplate = null
+      save(); render()
+    }
+  })
+}
 
-window.clearWeek = ()=>{
+window.clearWeek = () => {
   const dates = getDates()
-  const removed = getVisibleEntries().filter(e=>dates.includes(e.date))
-  if(!removed.length) return alert('No entries this week.')
-  if(!confirm(`Delete ${removed.length} entries from this week?`)) return
-  pushHist({ t:'clearWeek', entries:removed.map(e=>({...e})) })
-  const ids = new Set(removed.map(e=>e.id))
-  DB.entries = DB.entries.filter(e=>!ids.has(e.id))
-  save(); render()
+  const removed = getVisibleEntries().filter(e => dates.includes(e.date))
+  if (!removed.length) {
+    showConfirmModal({ title: 'Nothing to clear', message: 'There are no entries in the current week.', danger: false })
+    return
+  }
+  showConfirmModal({
+    title: 'Clear this week?',
+    message: `This will delete all ${removed.length} time ${removed.length === 1 ? 'entry' : 'entries'} from the current week view.`,
+    confirmLabel: 'Clear Week',
+    onConfirm: () => {
+      pushHist({ t: 'clearWeek', entries: removed.map(e => ({...e})) })
+      const ids = new Set(removed.map(e => e.id))
+      DB.entries = DB.entries.filter(e => !ids.has(e.id))
+      save(); render()
+    }
+  })
 }
 
 window.showProjectCtx = (e, id) => {
@@ -969,10 +1067,9 @@ function buildProjectModal() {
   const autoColor = pickDistinctColor(colors)
   return `<div class="modal-box" onclick="event.stopPropagation()">
     <h3 class="text-lg font-semibold mb-4">New Project</h3>
-    <form onsubmit="event.preventDefault();submitProject()">
       <div class="space-y-3">
         <div><label class="text-xs font-medium block mb-1">Client</label><input class="input" id="m-client" placeholder="Client" autocomplete="off"></div>
-        <div><label class="text-xs font-medium block mb-1">Project Name</label><input class="input" id="m-name" placeholder="Project name" required autocomplete="off"></div>
+        <div><label class="text-xs font-medium block mb-1">Project Name</label><input class="input" id="m-name" placeholder="Project name" autocomplete="off" onkeydown="if(event.key==='Enter')submitProject()"></div>
         <div class="flex gap-2 flex-wrap items-center" id="color-picker">
           ${colors.map(c=>`<button type="button" class="w-7 h-7 rounded-full border-2 hover:scale-110 transition-transform color-btn" style="background:${c};border-color:${c===autoColor?'var(--text)':'transparent'};${c===autoColor?'transform:scale(1.15)':''}" data-color="${c}" onclick="pickColor('${c}')"></button>`).join('')}
           <label class="w-7 h-7 rounded-full border-2 border-dashed hover:scale-110 transition-transform cursor-pointer relative" style="border-color:var(--border)" title="Custom color">
@@ -984,9 +1081,8 @@ function buildProjectModal() {
       </div>
       <div class="flex justify-end gap-2 mt-5">
         <button type="button" class="btn" onclick="closeModal()">Cancel</button>
-        <button type="submit" class="btn btn-primary">Create</button>
+        <button type="button" class="btn btn-primary" onclick="submitProject()">Create</button>
       </div>
-    </form>
   </div>`
 }
 window.pickColor = (color) => { document.getElementById('m-color').value=color; const wheel=document.getElementById('m-color-wheel'); if(wheel)wheel.value=color; document.querySelectorAll('#color-picker .color-btn').forEach(b=>{b.style.borderColor=b.dataset.color===color?'var(--text)':'transparent';b.style.transform=b.dataset.color===color?'scale(1.15)':''}) }
@@ -1030,7 +1126,7 @@ function buildEditProjectModal(projectId) {
     <form onsubmit="event.preventDefault();submitEditProject()">
       <div class="space-y-3">
         <div><label class="text-xs font-medium block mb-1">Client</label><input class="input" id="m-client" value="${esc(proj.client)}" placeholder="Client" autocomplete="off"></div>
-        <div><label class="text-xs font-medium block mb-1">Project Name</label><input class="input" id="m-name" value="${esc(proj.name)}" placeholder="Project name" required autocomplete="off"></div>
+        <div><label class="text-xs font-medium block mb-1">Project Name</label><input class="input" id="m-name" value="${esc(proj.name)}" placeholder="Project name" autocomplete="off" onkeydown="if(event.key==='Enter')submitEditProject()"></div>
         <div class="flex gap-2 flex-wrap items-center" id="color-picker">
           ${colors.map(c=>`<button type="button" class="w-7 h-7 rounded-full border-2 hover:scale-110 transition-transform color-btn" style="background:${c};border-color:${c===currentColor?'var(--text)':'transparent'};${c===currentColor?'transform:scale(1.15)':''}" data-color="${c}" onclick="pickColor('${c}')"></button>`).join('')}
           <label class="w-7 h-7 rounded-full border-2 border-dashed hover:scale-110 transition-transform cursor-pointer relative" style="border-color:var(--border)" title="Custom color">
@@ -1045,7 +1141,7 @@ function buildEditProjectModal(projectId) {
           <button type="button" class="btn" style="color:var(--danger);border-color:var(--danger)" onclick="confirmDeleteProject('${proj.id}');closeModal()">Delete</button>
           <button type="button" class="btn" onclick="archiveProject('${proj.id}');closeModal()">Archive</button>
         </div>
-        <div class="flex gap-2"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>
+        <div class="flex gap-2"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button type="button" class="btn btn-primary" onclick="submitEditProject()">Save</button></div>
       </div>
     </form>
   </div>`
@@ -1055,15 +1151,13 @@ window.submitEditProject = () => { const id=document.getElementById('m-epid').va
 function buildTemplateModal() {
   return `<div class="modal-box" onclick="event.stopPropagation()">
     <h3 class="text-lg font-semibold mb-4">New Task Template</h3>
-    <form onsubmit="event.preventDefault();submitTemplate()">
       <div class="space-y-3">
-        <input class="input" id="m-tname" placeholder="Template name" required autocomplete="off">
+        <input class="input" id="m-tname" placeholder="Template name" autocomplete="off" onkeydown="if(event.key==='Enter')submitTemplate()">
       </div>
       <div class="flex justify-end gap-2 mt-5">
         <button type="button" class="btn" onclick="closeModal()">Cancel</button>
-        <button type="submit" class="btn btn-primary">Create</button>
+        <button type="button" class="btn btn-primary" onclick="submitTemplate()">Create</button>
       </div>
-    </form>
   </div>`
 }
 window.submitTemplate = () => { const name=document.getElementById('m-tname').value.trim(); if(!name)return; DB.templates.push({id:uid(),name,tags:[]}); save(); closeModal(); render() }
@@ -1090,7 +1184,7 @@ function buildEditModal(entryId) {
       </div>
       <div class="flex justify-between mt-5">
         <button type="button" class="btn" style="color:var(--danger);border-color:var(--danger)" onclick="deleteFromModal()">Delete</button>
-        <div class="flex gap-2"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">Save</button></div>
+        <div class="flex gap-2"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button type="button" class="btn btn-primary" onclick="submitEdit()">Save</button></div>
       </div>
     </form>
   </div>`
@@ -1343,8 +1437,316 @@ function doExportPDF(entries, suffix) {
 }
 
 window.exportConfig = () => { dl(JSON.stringify({projects:DB.projects,templates:DB.templates,entries:DB.entries,preferences:{theme:DB.theme,view:DB.view}},null,2),'time-tracker-config.json','application/json') }
-window.importConfig = () => { const inp=document.createElement('input');inp.type='file';inp.accept='.json'; inp.onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{const cfg=JSON.parse(await f.text());if(cfg.projects)DB.projects=cfg.projects;if(cfg.templates)DB.templates=cfg.templates;if(cfg.entries)DB.entries=cfg.entries;if(cfg.preferences){DB.theme=cfg.preferences.theme||'light';DB.view=cfg.preferences.view||'week';document.documentElement.classList.toggle('dark',DB.theme==='dark')};save();render()}catch{alert('Invalid config file')}}; inp.click() }
+window.importConfig = () => { const inp=document.createElement('input');inp.type='file';inp.accept='.json'; inp.onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{const cfg=JSON.parse(await f.text());if(cfg.projects)DB.projects=cfg.projects;if(cfg.templates)DB.templates=cfg.templates;if(cfg.entries)DB.entries=cfg.entries;if(cfg.preferences){DB.theme=cfg.preferences.theme||'light';DB.view=cfg.preferences.view||'week';document.documentElement.classList.toggle('dark',DB.theme==='dark')};save();render()}catch{showConfirmModal({title:'Invalid file',message:'The selected file could not be loaded. Please choose a valid TimeTracker backup (.json) file.',danger:false})}}; inp.click() }
 function dl(content,name,type){const b=new Blob([content],{type});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
+
+// ═══════════════════════════════════════════════════════════════
+// CSV IMPORT
+// ═══════════════════════════════════════════════════════════════
+const CSV_PALETTE = ['#4f46e5','#0891b2','#16a34a','#ca8a04','#dc2626','#9333ea','#e11d48','#0d9488','#d97706','#6366f1','#ec4899','#14b8a6']
+
+// ── CSV parsing ──────────────────────────────────────────────
+function parseCSV(text) {
+  const lines = text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n')
+  const rows = []
+  for(const line of lines) {
+    if(!line.trim()) continue
+    const cells = []; let cur = '', inQ = false
+    for(let i = 0; i < line.length; i++) {
+      const ch = line[i]
+      if(ch === '"') { if(inQ && line[i+1]==='"') { cur+='"'; i++ } else inQ=!inQ }
+      else if(ch === ',' && !inQ) { cells.push(cur.trim()); cur='' }
+      else cur += ch
+    }
+    cells.push(cur.trim())
+    rows.push(cells)
+  }
+  return rows
+}
+
+function csvRowsToObjects(rows) {
+  if(rows.length < 2) return { headers: [], records: [] }
+  const headers = rows[0].map(h => h.toLowerCase().trim())
+  const records = rows.slice(1).map(row => {
+    const obj = {}
+    headers.forEach((h, i) => { obj[h] = (row[i] || '').trim() })
+    return obj
+  }).filter(r => Object.values(r).some(v => v !== ''))
+  return { headers, records }
+}
+
+// ── Validation ───────────────────────────────────────────────
+function validateProjectsCSV(records) {
+  const errors = [], warnings = [], parsed = []
+  for(let i = 0; i < records.length; i++) {
+    const r = records[i], row = i + 2
+    if(!r['project name'] && !r['name']) { errors.push(`Row ${row}: missing "project name"`); continue }
+    const name = (r['project name'] || r['name']).trim()
+    if(!name) { errors.push(`Row ${row}: project name is blank`); continue }
+    let color = (r['color'] || '').trim()
+    if(color && !/^#[0-9a-fA-F]{6}$/.test(color)) { warnings.push(`Row ${row}: invalid color "${color}", will auto-assign`); color = '' }
+    parsed.push({ name, client: (r['client'] || '').trim(), color })
+  }
+  return { errors, warnings, parsed }
+}
+
+function validateTasksCSV(records) {
+  const errors = [], warnings = [], parsed = []
+  for(let i = 0; i < records.length; i++) {
+    const r = records[i], row = i + 2
+    if(!r['task name'] && !r['name']) { errors.push(`Row ${row}: missing "task name"`); continue }
+    const name = (r['task name'] || r['name']).trim()
+    if(!name) { errors.push(`Row ${row}: task name is blank`); continue }
+    const tags = (r['tags'] || '').split(';').map(t=>t.trim()).filter(Boolean)
+    parsed.push({ name, tags })
+  }
+  return { errors, warnings, parsed }
+}
+
+// ── Template CSVs ─────────────────────────────────────────────
+window.downloadProjectsTemplate = () => {
+  const csv = [
+    '"project name","client","color"',
+    '"Website Redesign","Acme Corp","#4f46e5"',
+    '"Mobile App","TechStart","#0891b2"',
+    '"Internal Tools","","#16a34a"',
+  ].join('\n')
+  dl(csv, 'projects-template.csv', 'text/csv')
+}
+
+window.downloadTasksTemplate = () => {
+  const csv = [
+    '"task name","tags"',
+    '"Development","coding;frontend"',
+    '"Code Review","review"',
+    '"Meetings","communication"',
+    '"Design","creative;ui"',
+    '"Testing","qa"',
+    '"Documentation","writing"',
+  ].join('\n')
+  dl(csv, 'tasks-template.csv', 'text/csv')
+}
+
+// ── Dialog state ──────────────────────────────────────────────
+let csvImportState = { tab: 'projects', file: null, parsed: null, errors: [], warnings: [], mergeMode: 'merge' }
+
+window.openCsvImportDialog = () => {
+  csvImportState = { tab: 'projects', file: null, parsed: null, errors: [], warnings: [], mergeMode: 'merge' }
+  renderCsvImportDialog()
+}
+
+window.closeCsvImportDialog = () => { document.getElementById('csv-import-root')?.remove() }
+
+window.csvSwitchTab = (tab) => {
+  csvImportState = { tab, file: null, parsed: null, errors: [], warnings: [], mergeMode: 'merge' }
+  renderCsvImportDialog()
+}
+
+window.csvSetMerge = (v) => { csvImportState.mergeMode = v }
+
+function renderCsvImportDialog() {
+  let root = document.getElementById('csv-import-root')
+  if(!root) {
+    root = document.createElement('div')
+    root.className = 'modal-bg'; root.id = 'csv-import-root'
+    root.addEventListener('mousedown', e => { if(e.target === root) closeCsvImportDialog() })
+    document.body.appendChild(root)
+  }
+  const { tab, parsed, errors, warnings, mergeMode } = csvImportState
+  const isProjects = tab === 'projects'
+  const hasData = parsed && parsed.length > 0
+  const hasErrors = errors.length > 0
+
+  let previewHTML = ''
+  if(errors.length && !hasData) {
+    previewHTML = `<div class="csv-error" style="padding:10px 0">${errors.map(e=>`⚠ ${esc(e)}`).join('<br>')}</div>`
+  } else if(hasData) {
+    const warnHTML = warnings.length ? `<div style="color:var(--danger);font-size:11px;margin-bottom:6px">${warnings.map(w=>`⚠ ${esc(w)}`).join('<br>')}</div>` : ''
+    const errHTML = errors.length ? `<div class="csv-error" style="margin-bottom:6px">${errors.map(e=>`⚠ ${esc(e)}`).join('<br>')}</div>` : ''
+    if(isProjects) {
+      previewHTML = `${errHTML}${warnHTML}
+        <div style="overflow-x:auto;max-height:180px;overflow-y:auto;margin-top:8px">
+          <table class="csv-preview-table">
+            <thead><tr><th>Project Name</th><th>Client</th><th>Color</th></tr></thead>
+            <tbody>${parsed.map(p=>`<tr>
+              <td>${esc(p.name)}</td>
+              <td>${esc(p.client||'—')}</td>
+              <td><span style="display:inline-flex;align-items:center;gap:5px"><span style="width:12px;height:12px;border-radius:50%;background:${esc(p.color||'#888')};display:inline-block"></span>${esc(p.color||'auto')}</span></td>
+            </tr>`).join('')}</tbody>
+          </table>
+        </div>
+        <div class="csv-merge-opts">
+          <label><input type="radio" name="csvmerge" value="merge" ${mergeMode==='merge'?'checked':''} onchange="csvSetMerge('merge')" style="accent-color:var(--primary)"> Merge (skip duplicates)</label>
+          <label><input type="radio" name="csvmerge" value="replace" ${mergeMode==='replace'?'checked':''} onchange="csvSetMerge('replace')" style="accent-color:var(--primary)"> Replace all projects</label>
+        </div>`
+    } else {
+      previewHTML = `${errHTML}${warnHTML}
+        <div style="overflow-x:auto;max-height:180px;overflow-y:auto;margin-top:8px">
+          <table class="csv-preview-table">
+            <thead><tr><th>Task Name</th><th>Tags</th></tr></thead>
+            <tbody>${parsed.map(t=>`<tr>
+              <td>${esc(t.name)}</td>
+              <td>${esc(t.tags.join(', ')||'—')}</td>
+            </tr>`).join('')}</tbody>
+          </table>
+        </div>
+        <div class="csv-merge-opts">
+          <label><input type="radio" name="csvmerge" value="merge" ${mergeMode==='merge'?'checked':''} onchange="csvSetMerge('merge')" style="accent-color:var(--primary)"> Merge (skip duplicates)</label>
+          <label><input type="radio" name="csvmerge" value="replace" ${mergeMode==='replace'?'checked':''} onchange="csvSetMerge('replace')" style="accent-color:var(--primary)"> Replace all tasks</label>
+        </div>`
+    }
+  }
+
+  root.innerHTML = `
+    <div class="modal-box csv-import-modal" onclick="event.stopPropagation()">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <h3 class="font-semibold text-sm">Import from CSV</h3>
+        <button class="btn btn-icon btn-sm" onclick="closeCsvImportDialog()">✕</button>
+      </div>
+      <div class="csv-tab-bar">
+        <button class="csv-tab ${isProjects?'active':''}" onclick="csvSwitchTab('projects')">📁 Projects</button>
+        <button class="csv-tab ${!isProjects?'active':''}" onclick="csvSwitchTab('tasks')">🏷️ Tasks</button>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between">
+        <span>Required columns: ${isProjects?'<code style="background:var(--surface-alt);padding:1px 4px;border-radius:3px">project name</code>, <code style="background:var(--surface-alt);padding:1px 4px;border-radius:3px">client</code>, <code style="background:var(--surface-alt);padding:1px 4px;border-radius:3px">color</code>':'<code style="background:var(--surface-alt);padding:1px 4px;border-radius:3px">task name</code>, <code style="background:var(--surface-alt);padding:1px 4px;border-radius:3px">tags</code>'}</span>
+        <button class="btn btn-sm" onclick="${isProjects?'downloadProjectsTemplate':'downloadTasksTemplate'}()" style="font-size:11px">⬇ Template</button>
+      </div>
+      <div class="csv-drop-zone" id="csv-drop-zone" onclick="document.getElementById('csv-file-input').click()"
+        ondragover="event.preventDefault();this.classList.add('dragover')"
+        ondragleave="this.classList.remove('dragover')"
+        ondrop="event.preventDefault();this.classList.remove('dragover');handleCsvDrop(event)">
+        <div style="font-size:28px;margin-bottom:6px">📂</div>
+        <div style="font-size:13px;font-weight:500;color:var(--text)">Drop a CSV file here or click to browse</div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:4px">${csvImportState.file ? `Selected: <strong>${esc(csvImportState.file)}</strong>` : 'Accepts .csv files'}</div>
+      </div>
+      <input type="file" id="csv-file-input" accept=".csv,text/csv" style="display:none" onchange="handleCsvFileInput(this)">
+      ${previewHTML}
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+        <button class="btn" onclick="closeCsvImportDialog()">Cancel</button>
+        <button class="btn btn-primary" ${hasData && !hasErrors ? '' : 'disabled'} onclick="commitCsvImport()">
+          Import ${hasData ? `(${parsed.length} ${isProjects?'project':'task'}${parsed.length===1?'':'s'})` : ''}
+        </button>
+      </div>
+    </div>`
+}
+
+window.handleCsvDrop = (e) => {
+  const file = e.dataTransfer.files?.[0]
+  if(file) processCsvFile(file)
+}
+
+window.handleCsvFileInput = (input) => {
+  const file = input.files?.[0]
+  if(file) processCsvFile(file)
+  input.value = ''
+}
+
+function processCsvFile(file) {
+  csvImportState.file = file.name
+  const reader = new FileReader()
+  reader.onload = e => {
+    const text = e.target.result
+    const rows = parseCSV(text)
+    const { records } = csvRowsToObjects(rows)
+    if(!records.length) {
+      csvImportState.errors = ['No data rows found. Make sure the file has a header row and at least one data row.']
+      csvImportState.parsed = null
+      renderCsvImportDialog(); return
+    }
+    const { errors, warnings, parsed } = csvImportState.tab === 'projects'
+      ? validateProjectsCSV(records)
+      : validateTasksCSV(records)
+    csvImportState.errors = errors
+    csvImportState.warnings = warnings
+    csvImportState.parsed = parsed.length ? parsed : null
+    renderCsvImportDialog()
+  }
+  reader.readAsText(file)
+}
+
+window.commitCsvImport = () => {
+  const { tab, parsed, mergeMode } = csvImportState
+  if(!parsed || !parsed.length) return
+
+  if(tab === 'projects') {
+    if(mergeMode === 'replace') DB.projects = []
+    for(const p of parsed) {
+      const exists = DB.projects.find(x => x.name.toLowerCase() === p.name.toLowerCase() && (x.client||'').toLowerCase() === (p.client||'').toLowerCase())
+      if(exists) continue
+      const color = p.color || pickDistinctColor(CSV_PALETTE)
+      DB.projects.push({ id: uid(), name: p.name, client: p.client || '', color, status: 'active' })
+    }
+  } else {
+    if(mergeMode === 'replace') DB.templates = []
+    for(const t of parsed) {
+      const exists = DB.templates.find(x => x.name.toLowerCase() === t.name.toLowerCase())
+      if(exists) continue
+      DB.templates.push({ id: uid(), name: t.name, tags: t.tags })
+    }
+  }
+  save(); render(); closeCsvImportDialog()
+  const noun = tab === 'projects' ? 'projects' : 'tasks'
+  showConfirmModal({ title: 'Import complete', message: `Successfully imported ${parsed.length} ${noun}.`, danger: false })
+}
+
+// ═══════════════════════════════════════════════════════════════
+// AUTOSAVE
+// ═══════════════════════════════════════════════════════════════
+const AUTOSAVE_INTERVAL_MS = 5 * 60 * 1000 // 5 minutes
+let autosaveTimer = null
+
+function doAutosave() {
+  const payload = JSON.stringify({
+    projects: DB.projects,
+    templates: DB.templates,
+    entries: DB.entries,
+    preferences: { theme: DB.theme, view: DB.view },
+    autosavedAt: new Date().toISOString()
+  }, null, 2)
+  const b = new Blob([payload], { type: 'application/json' })
+  const u = URL.createObjectURL(b)
+  const a = document.createElement('a')
+  a.href = u
+  a.download = 'time-tracker-autosave.json'
+  a.click()
+  setTimeout(() => URL.revokeObjectURL(u), 1000)
+  DB.lastAutosave = Date.now()
+  save()
+}
+
+function startAutosave() {
+  stopAutosave()
+  autosaveTimer = setInterval(doAutosave, AUTOSAVE_INTERVAL_MS)
+}
+
+function stopAutosave() {
+  if (autosaveTimer) { clearInterval(autosaveTimer); autosaveTimer = null }
+}
+
+window.toggleAutosave = () => {
+  DB.autosave = !DB.autosave
+  if (DB.autosave) startAutosave()
+  else stopAutosave()
+  save()
+  render()
+}
+
+function updateLastSavedDisplay() {
+  const el = document.getElementById('last-saved-ts')
+  if (!el) return
+  const ts = DB.lastSaved
+  if (!ts) { el.textContent = 'Never'; return }
+  const d = new Date(ts)
+  const pad = n => String(n).padStart(2, '0')
+  el.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`
+  // Also note last autosave if enabled
+  const ael = document.getElementById('last-autosave-ts')
+  if (ael) {
+    if (!DB.lastAutosave) { ael.textContent = 'Not yet'; return }
+    const ad = new Date(DB.lastAutosave)
+    ael.textContent = `${pad(ad.getHours())}:${pad(ad.getMinutes())}:${pad(ad.getSeconds())}`
+  }
+}
 
 // ═══════════════════════════════════════════════════════════════
 // TIMER (with auto-save and auto-stop)
@@ -1369,11 +1771,20 @@ function saveTimerState() {
 }
 
 window.startTimer = () => {
-  if(!DB.selProject || !DB.selTemplate) return alert('Select a project and task first.')
+  if(!DB.selProject || !DB.selTemplate) {
+    showConfirmModal({ title: 'Select a project and task', message: 'Please select a project and a task from the sidebar before starting the timer.', danger: false })
+    return
+  }
   timerStart = Date.now()
   saveTimerState()
   timerInterval = setInterval(updateTimerDisplay, 1000)
-  render()
+  // Swap toolbar button without full re-render
+  const startBtn = document.querySelector('button[onclick="startTimer()"]')
+  if (startBtn) {
+    startBtn.outerHTML = `<span id="timer-display" class="text-xs font-mono text-muted mr-1">00:00:00</span><button class="btn btn-sm" onclick="stopTimer()" style="color:var(--danger);border-color:var(--danger)">⏹ Stop</button>`
+  } else {
+    render()
+  }
 }
 window.stopTimer = () => {
   if(!timerStart) return
@@ -1387,6 +1798,7 @@ window.stopTimer = () => {
     addEntry({ projectId:DB.selProject, taskTemplateId:DB.selTemplate, date, startMinutes:startMin, endMinutes:endMin })
   }
   clearInterval(timerInterval); timerInterval = null; timerStart = null
+  document.title = 'TimeTracker'
   saveTimerState()
   render()
 }
@@ -1407,8 +1819,11 @@ function updateTimerDisplay() {
 
   const elapsed = Math.floor(elapsedMs / 1000)
   const h = Math.floor(elapsed/3600), m = Math.floor((elapsed%3600)/60), s = elapsed%60
+  const timeStr = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
   const el = document.getElementById('timer-display')
-  if(el) el.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+  if(el) el.textContent = timeStr
+  // #5: update tab title so the timer is visible from any tab
+  document.title = `⏱ ${timeStr} — TimeTracker`
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1418,6 +1833,7 @@ if(!DB.panelsCollapsed) DB.panelsCollapsed = {}
 if(DB.filterProject === undefined) DB.filterProject = false
 document.documentElement.classList.toggle('dark', DB.theme==='dark')
 loadTimerState()
+if(DB.autosave) startAutosave()
 window.addEventListener('beforeunload', e => { if(histStack.length||timerStart){e.preventDefault();e.returnValue=''} })
 render()
 </script>
