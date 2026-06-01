@@ -97,8 +97,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 #sidebar-resize-handle:hover,#sidebar-resize-handle.dragging{background:color-mix(in srgb,var(--primary) 40%,transparent)}
 
 /* Project tooltip */
-.proj-tooltip{position:fixed;z-index:300;background:var(--text);color:var(--surface);font-size:11px;font-weight:500;padding:4px 8px;border-radius:5px;pointer-events:none;white-space:nowrap;opacity:0;transition:opacity .12s;max-width:220px;overflow:hidden;text-overflow:ellipsis}
+.proj-tooltip{position:fixed;z-index:300;background:var(--text);color:var(--surface);font-size:11px;padding:6px 10px;border-radius:6px;pointer-events:none;white-space:nowrap;opacity:0;transition:opacity .12s;max-width:260px;line-height:1.5}
 .proj-tooltip.visible{opacity:1}
+.proj-tooltip .tt-client{font-size:10px;opacity:.7;font-weight:400}
+.proj-tooltip .tt-project{font-weight:700;font-size:12px}
+.proj-tooltip .tt-task{font-size:11px;opacity:.85}
+.proj-tooltip .tt-time{font-size:10px;opacity:.7;margin-top:2px;font-variant-numeric:tabular-nums}
 .csv-import-modal{max-width:560px;width:100%}
 .csv-tab-bar{display:flex;border-bottom:1px solid var(--border);margin-bottom:16px}
 .csv-tab{padding:7px 16px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:none;color:var(--text-muted);border-bottom:2px solid transparent;margin-bottom:-1px}
@@ -126,9 +130,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 // DATA LAYER
 // ═══════════════════════════════════════════════════════════════
 const LS_KEY = 'tt_data_v2', TIMER_KEY = 'tt_timer'
-const START_HOUR = 6, END_HOUR = 24
+const START_HOUR = 0, END_HOUR = 24
 const DISPLAY_HOURS = Array.from({length: END_HOUR - START_HOUR}, (_, i) => i + START_HOUR)
-const HOUR_H = 60
+const HOUR_H_PRESETS = { compact: 48, normal: 60, spacious: 84 }
+function getHourH() { return HOUR_H_PRESETS[DB.calDensity||'normal'] || 60 }
 const MAX_TIMER_MINS = 480 // 8 hours
 
 function uid() { return crypto.randomUUID() }
@@ -349,6 +354,7 @@ function buildToolbar() {
       <span class="text-xs text-muted mr-1 desktop-only">Today's Total: ${todayStr}</span>
       <button class="btn btn-sm ${DB.filterProject?'btn-primary':''}" onclick="toggleFilter()" title="Filter to selected project">🔽</button>
       <button class="btn btn-sm ${DB.snapToGrid?'btn-primary':''}" onclick="toggleSnap()" title="Snap to 15min grid">🧲</button>
+      <button class="btn btn-sm" onclick="cycleDensity()" title="Calendar row height">${densityLabel(DB.calDensity)}</button>
       ${['day','week','month'].map(v=>`<button class="btn btn-sm ${DB.view===v?'btn-primary':''}" onclick="setView('${v}')">${v[0].toUpperCase()+v.slice(1)}</button>`).join('')}
       <button class="btn btn-icon btn-sm" onclick="doUndo()" ${histStack.length?'':'disabled'} title="Undo">↶</button>
       <button class="btn btn-icon btn-sm" onclick="doRedo()" ${futureStack.length?'':'disabled'} title="Redo">↷</button>
@@ -372,30 +378,8 @@ function buildProjectTotalsBar() {
   </div>`
 }
 
-function buildSummaryChart() {
-  const dates = getViewDates()
-  if(!dates.size || DB.view==='month' || DB.view==='day') return ''
-  const sortedDates = [...dates].sort()
-  const dailyTotals = sortedDates.map(d=>DB.entries.filter(e=>e.date===d).reduce((s,e)=>s+(e.endMinutes-e.startMinutes),0))
-  const maxMins = Math.max(...dailyTotals, 60)
-  if(dailyTotals.every(v=>v===0)) return ''
-  const barH = 32
-  return `<div class="flex border-b border-main bg-surface flex-shrink-0" style="height:44px;align-items:stretch">
-    <div class="w-11 md:w-14 flex-shrink-0 border-r border-main" style="display:flex;align-items:flex-end;justify-content:center;padding-bottom:2px">
-      <span class="text-[10px] text-muted">📊</span>
-    </div>
-    <div style="display:flex;flex:1;align-items:stretch">
-      ${sortedDates.map((d,i)=>{
-        const mins=dailyTotals[i]
-        const h=mins>0?Math.max(Math.round(mins/maxMins*barH),3):0
-        const dayLabel=parseDate(d).toLocaleDateString('en-US',{weekday:'short'})+' '+fmtDur(mins)
-        return `<div style="flex:1;min-width:90px;border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:flex-end;align-items:center;padding-bottom:2px" title="${dayLabel}">
-          <div style="width:60%;height:${h}px;background:var(--primary);opacity:${mins>0?'0.6':'0.15'};border-radius:3px 3px 0 0"></div>
-        </div>`
-      }).join('')}
-    </div>
-  </div>`
-}
+function buildSummaryChart() { return '' }
+
 
 function buildSidebar() {
   if(DB.sidebarCollapsed) {
@@ -411,7 +395,7 @@ function buildSidebar() {
   return `<aside id="sidebar" class="w-64 border-r border-main bg-surface flex-col overflow-hidden flex-shrink-0 hidden md:flex" style="z-index:45;position:relative;width:${DB.sidebarWidth||256}px">
     <div id="sidebar-resize-handle" title="Drag to resize"></div>
     <div class="flex items-center justify-between p-3 border-b border-main">
-      <h2 class="font-semibold text-sm">Time Tracker</h2>
+      <h2 class="font-semibold text-sm">Select a project below</h2>
       <button class="btn btn-icon btn-sm mobile-only" onclick="closeSidebar()">✕</button>
     </div>
     <div class="flex-1 overflow-y-auto p-3 space-y-4">
@@ -434,7 +418,7 @@ function buildSidebar() {
         </div>
         ${pCollapsed?'':`<div class="space-y-0.5">
           ${projects.map(p=>`
-            <div class="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer text-sm hover:bg-[var(--hover)] ${DB.selProject===p.id?'selected-ring':''}" draggable="true" ondragstart="projectDragStart(event,'${p.id}')" ondragover="projectDragOver(event)" ondrop="projectDrop(event,'${p.id}')" onclick="selectProject('${p.id}')" oncontextmenu="event.preventDefault();showProjectCtx(event,'${p.id}')" onmouseenter="showProjTooltip(event,'${esc(p.client?p.client+' — '+p.name:p.name)}')" onmouseleave="hideProjTooltip()">
+            <div class="flex items-center gap-2 px-2 py-1.5 rounded-md cursor-pointer text-sm hover:bg-[var(--hover)] ${DB.selProject===p.id?'selected-ring':''}" draggable="true" ondragstart="projectDragStart(event,'${p.id}')" ondragover="projectDragOver(event)" ondrop="projectDrop(event,'${p.id}')" onclick="selectProject('${p.id}')" oncontextmenu="event.preventDefault();showProjectCtx(event,'${p.id}')" data-tooltip="${esc(p.client?p.client+' \u2014 '+p.name:p.name)}" onmouseenter="showProjTooltip(event,this.dataset.tooltip)" onmouseleave="hideProjTooltip()">
               <span class="w-3 h-3 rounded-full flex-shrink-0" style="background:${p.color}"></span>
               <span class="truncate flex-1">${esc(p.name)}</span>
               <span class="text-xs text-muted truncate">${esc(p.client)}</span>
@@ -450,7 +434,7 @@ function buildSidebar() {
         </div>
         ${aCollapsed?'':`<div class="space-y-0.5 opacity-60">
           ${archivedProjects.map(p=>`
-            <div class="flex items-center gap-2 px-2 py-1 rounded-md text-xs hover:bg-[var(--hover)]" onmouseenter="showProjTooltip(event,'${esc(p.client?p.client+' — '+p.name:p.name)}')" onmouseleave="hideProjTooltip()">
+            <div class="flex items-center gap-2 px-2 py-1 rounded-md text-xs hover:bg-[var(--hover)]" data-tooltip="${esc(p.client?p.client+' \u2014 '+p.name:p.name)}" onmouseenter="showProjTooltip(event,this.dataset.tooltip)" onmouseleave="hideProjTooltip()">
               <span class="w-2 h-2 rounded-full flex-shrink-0" style="background:${p.color}"></span>
               <span class="truncate flex-1">${esc(p.name)}</span>
               <button class="btn btn-sm btn-icon" style="width:18px;height:18px;font-size:9px;border:none;opacity:.6" onclick="event.stopPropagation();unarchiveProject('${p.id}')" title="Unarchive">↩</button>
@@ -494,7 +478,7 @@ function buildSidebar() {
             <div style="display:flex;justify-content:space-between"><span>Last saved:</span><span id="last-saved-ts" style="font-variant-numeric:tabular-nums">${DB.lastSaved?new Date(DB.lastSaved).toTimeString().slice(0,8):'Never'}</span></div>
             ${DB.autosave?`<div style="display:flex;justify-content:space-between"><span>Last backup:</span><span id="last-autosave-ts" style="font-variant-numeric:tabular-nums">${DB.lastAutosave?new Date(DB.lastAutosave).toTimeString().slice(0,8):'Not yet'}</span></div>`:''}
           </div>
-          <button class="btn btn-sm w-full" onclick="clearWeek()" style="color:var(--danger);border-color:var(--danger)">🗑️ Clear Week</button>
+          <button class="btn btn-sm w-full" onclick="clearView()" style="color:var(--danger);border-color:var(--danger)">🗑️ Clear ${ {day:'Day',week:'Week',month:'Month'}[DB.view]||'View' }</button>
         </div>`}
       </section>
     </div>
@@ -504,7 +488,7 @@ function buildSidebar() {
 function buildTimeGrid() {
   const dates = getDates()
   const isWeek = DB.view === 'week'
-  const gridH = DISPLAY_HOURS.length * HOUR_H
+  const gridH = DISPLAY_HOURS.length * getHourH()
   return `
     <div class="flex-1 flex flex-col overflow-hidden">
       ${isWeek?`<div class="flex flex-shrink-0">
@@ -515,7 +499,7 @@ function buildTimeGrid() {
       <div id="cal-scroll" class="flex-1 overflow-y-auto overflow-x-auto flex">
         <div class="w-11 md:w-14 flex-shrink-0 border-r border-main" style="padding-top:8px">
           <div class="relative" style="height:${gridH}px">
-            ${DISPLAY_HOURS.map((h,i)=>`<div class="absolute w-full text-right pr-1 text-[10px] md:text-xs text-muted" style="top:${i*HOUR_H}px;transform:translateY(-50%)">${mToTime(h*60)}</div>`).join('')}
+            ${DISPLAY_HOURS.map((h,i)=>`<div class="absolute w-full text-right pr-1 text-[10px] md:text-xs text-muted" style="top:${i*getHourH()}px;transform:translateY(-50%)">${mToTime(h*60)}</div>`).join('')}
           </div>
         </div>
         ${dates.map(date=>buildDayCol(date, isWeek)).join('')}
@@ -530,23 +514,24 @@ function buildDayCol(dateStr, showHeader) {
   const d = parseDate(dateStr)
   const isToday = dateStr === toISO(new Date())
   const nowMin = (()=>{ const n=new Date(); return n.getHours()*60+n.getMinutes() })()
-  const gridH = DISPLAY_HOURS.length * HOUR_H
+  const gridH = DISPLAY_HOURS.length * getHourH()
 
   return `<div class="flex-1 min-w-[90px] ${showHeader?'border-r border-main last:border-r-0':''} flex flex-col" style="padding-top:8px">
     <div class="relative flex-1" style="height:${gridH}px;touch-action:none" data-date="${dateStr}" id="col-${dateStr}">
-      ${DISPLAY_HOURS.map((h,i)=>`<div class="absolute w-full hour-line ${h<7||h>=17?'non-work-hour':''}" style="top:${i*HOUR_H}px;height:${HOUR_H}px"></div>`).join('')}
-      ${DISPLAY_HOURS.map((h,i)=>`<div class="absolute w-full half-line" style="top:${i*HOUR_H+HOUR_H/2}px"></div><div class="quarter-line" style="top:${i*HOUR_H+HOUR_H/4}px"></div><div class="quarter-line" style="top:${i*HOUR_H+HOUR_H*3/4}px"></div>`).join('')}
-      ${isToday && nowMin >= START_HOUR*60 ?`<div class="now-line" style="top:${((nowMin-START_HOUR*60)/60)*HOUR_H}px"><div class="now-dot"></div></div>`:''}
+      ${DISPLAY_HOURS.map((h,i)=>`<div class="absolute w-full hour-line ${h<7||h>=17?'non-work-hour':''}" style="top:${i*getHourH()}px;height:${getHourH()}px"></div>`).join('')}
+      ${DISPLAY_HOURS.map((h,i)=>`<div class="absolute w-full half-line" style="top:${i*getHourH()+getHourH()/2}px"></div><div class="quarter-line" style="top:${i*getHourH()+getHourH()/4}px"></div><div class="quarter-line" style="top:${i*getHourH()+getHourH()*3/4}px"></div>`).join('')}
+      ${isToday && nowMin >= START_HOUR*60 ?`<div class="now-line" style="top:${((nowMin-START_HOUR*60)/60)*getHourH()}px"><div class="now-dot"></div></div>`:''}
       ${entries.map(entry=>{
         const info=layout.get(entry.id)||{col:0,total:1.35}
-        const top=((entry.startMinutes-START_HOUR*60)/60)*HOUR_H
-        const height=Math.max(((entry.endMinutes-entry.startMinutes)/60)*HOUR_H, 15)
+        const top=((entry.startMinutes-START_HOUR*60)/60)*getHourH()
+        const height=Math.max(((entry.endMinutes-entry.startMinutes)/60)*getHourH(), 15)
         const w=(1/info.total*100)+'%'
         const left=(info.col/info.total*100)+'%'
         const proj=DB.projects.find(p=>p.id===entry.projectId)
         const tmpl=DB.templates.find(t=>t.id===entry.taskTemplateId)
         const color=proj?.color||'#6b7280'
-        return `<div class="entry-block" data-entry-id="${entry.id}" style="top:${top}px;height:${height}px;width:${w};left:${left};background:color-mix(in srgb,${color} 12%,var(--surface));border-left:3px solid ${color};border-top:1px solid color-mix(in srgb,${color} 30%,transparent);border-right:1px solid color-mix(in srgb,${color} 30%,transparent);border-bottom:1px solid color-mix(in srgb,${color} 30%,transparent)">
+        const tooltipData = esc(JSON.stringify({client:proj?.client||'',project:proj?.name||'Unknown',task:tmpl?.name||'',time:`${mToTime(entry.startMinutes)} – ${mToTime(entry.endMinutes)}`}))
+        return `<div class="entry-block" data-entry-id="${entry.id}" data-tooltip="${tooltipData}" onmouseenter="showProjTooltip(event,this.dataset.tooltip)" onmouseleave="hideProjTooltip()" onmousemove="_updateTooltipPos(event)" style="top:${top}px;height:${height}px;width:${w};left:${left};background:color-mix(in srgb,${color} 12%,var(--surface));border-left:3px solid ${color};border-top:1px solid color-mix(in srgb,${color} 30%,transparent);border-right:1px solid color-mix(in srgb,${color} 30%,transparent);border-bottom:1px solid color-mix(in srgb,${color} 30%,transparent)">
           <div class="resize-n" data-resize="top" data-entry-id="${entry.id}"></div>
           <div class="px-1.5 py-0.5 overflow-hidden h-full pointer-events-none">
             <div class="text-[11px] font-semibold truncate" style="color:${color}">${esc(proj?.name||'?')}</div>
@@ -633,7 +618,7 @@ let drag = null
 function getMins(clientY, colEl) {
   const rect = colEl.getBoundingClientRect()
   const y = clientY - rect.top
-  return snap15(clamp(Math.round(y / HOUR_H * 60) + START_HOUR*60, START_HOUR*60, END_HOUR*60))
+  return snap15(clamp(Math.round(y / getHourH() * 60) + START_HOUR*60, START_HOUR*60, END_HOUR*60))
 }
 
 function getColFromPoint(target) {
@@ -720,6 +705,7 @@ document.addEventListener('pointerdown', function(e) {
 document.addEventListener('pointermove', function(e) {
   if(!drag) return
   e.preventDefault()
+  hideProjTooltip()
 
   if(drag.type === 'pending') {
     const curMin = getMins(e.clientY, drag.colEl)
@@ -842,8 +828,8 @@ document.addEventListener('keydown', function(e) {
 function renderEntryInPlace(entry) {
   const el = document.querySelector(`[data-entry-id="${entry.id}"].entry-block`)
   if(!el) return
-  el.style.top = ((entry.startMinutes-START_HOUR*60)/60)*HOUR_H + 'px'
-  el.style.height = Math.max(((entry.endMinutes-entry.startMinutes)/60)*HOUR_H, 15) + 'px'
+  el.style.top = ((entry.startMinutes-START_HOUR*60)/60)*getHourH() + 'px'
+  el.style.height = Math.max(((entry.endMinutes-entry.startMinutes)/60)*getHourH(), 15) + 'px'
 }
 
 function showDragPreview(colEl, min1, min2) {
@@ -852,8 +838,8 @@ function showDragPreview(colEl, min1, min2) {
   const s=Math.min(min1,min2), e=Math.max(min1,min2)
   if(e-s < 15) { pv.style.display='none'; return }
   pv.style.display=''
-  pv.style.top = ((s-START_HOUR*60)/60)*HOUR_H+'px'
-  pv.style.height = ((e-s)/60)*HOUR_H+'px'
+  pv.style.top = ((s-START_HOUR*60)/60)*getHourH()+'px'
+  pv.style.height = ((e-s)/60)*getHourH()+'px'
   const proj = DB.projects.find(p=>p.id===DB.selProject)
   if(proj) { pv.style.borderColor=proj.color; pv.style.background=`color-mix(in srgb,${proj.color} 10%,transparent)` }
 }
@@ -877,6 +863,8 @@ window.selectProject = (id)=>{ DB.selProject=(DB.selProject===id||id==='')?null:
 window.selectTemplate = (id)=>{ DB.selTemplate=(DB.selTemplate===id||id==='')?null:id; save(); render() }
 window.toggleFilter = ()=>{ DB.filterProject=!DB.filterProject; save(); render() }
 window.toggleSnap = ()=>{ if(DB.snapToGrid===undefined) DB.snapToGrid=true; DB.snapToGrid=!DB.snapToGrid; save(); render() }
+window.cycleDensity = ()=>{ const order=['compact','normal','spacious']; const i=order.indexOf(DB.calDensity||'normal'); DB.calDensity=order[(i+1)%3]; save(); render() }
+function densityLabel(d) { return d==='compact'?'▤ Compact':d==='spacious'?'▨ Spacious':'▦ Normal' }
 window.doUndo = doUndo
 window.doRedo = doRedo
 
@@ -960,17 +948,18 @@ window.confirmDeleteTemplate = (id) => {
   })
 }
 
-window.clearWeek = () => {
+window.clearView = () => {
+  const viewName = {day:'Day',week:'Week',month:'Month'}[DB.view] || 'View'
   const dates = getDates()
   const removed = getVisibleEntries().filter(e => dates.includes(e.date))
   if (!removed.length) {
-    showConfirmModal({ title: 'Nothing to clear', message: 'There are no entries in the current week.', danger: false })
+    showConfirmModal({ title: 'Nothing to clear', message: `There are no entries in the current ${viewName.toLowerCase()}.`, danger: false })
     return
   }
   showConfirmModal({
-    title: 'Clear this week?',
-    message: `This will delete all ${removed.length} time ${removed.length === 1 ? 'entry' : 'entries'} from the current week view.`,
-    confirmLabel: 'Clear Week',
+    title: `Clear this ${viewName.toLowerCase()}?`,
+    message: `This will delete all ${removed.length} time ${removed.length === 1 ? 'entry' : 'entries'} from the current ${viewName.toLowerCase()} view.`,
+    confirmLabel: `Clear ${viewName}`,
     onConfirm: () => {
       pushHist({ t: 'clearWeek', entries: removed.map(e => ({...e})) })
       const ids = new Set(removed.map(e => e.id))
@@ -979,6 +968,7 @@ window.clearWeek = () => {
     }
   })
 }
+window.clearWeek = window.clearView // backward compat
 
 window.showProjectCtx = (e, id) => {
   closeCtxMenu()
@@ -1398,23 +1388,30 @@ window.expDoOutput = () => {
   if(!expIsValid()) return
   let filtered
   let filenameSuffix = ''
+  let exportContext = { outputBy: expState.outputBy }
+
   if(expState.outputBy==='daterange') {
     filtered = DB.entries.filter(e=>e.date>=expState.startDate && e.date<=expState.endDate)
     const [,sm,sd]=expState.startDate.split('-')
     const [,em,ed]=expState.endDate.split('-')
     filenameSuffix = `-${parseInt(sm)}-${parseInt(sd)}-to-${parseInt(em)}-${parseInt(ed)}`
+    exportContext.startDate = expState.startDate
+    exportContext.endDate = expState.endDate
   } else if(expState.outputBy==='client') {
     const clientProjectIds = DB.projects.filter(p=>expState.selectedClients.has(p.client||'(No Client)')).map(p=>p.id)
     filtered = DB.entries.filter(e=>clientProjectIds.includes(e.projectId))
     const names=[...expState.selectedClients]
     filenameSuffix = names.length===1?`-${names[0].toLowerCase().replace(/\s+/g,'-')}`:`-${names.length}-clients`
+    exportContext.clientNames = names
   } else {
     filtered = DB.entries.filter(e=>expState.selectedProjects.has(e.projectId))
-    const names=DB.projects.filter(p=>expState.selectedProjects.has(p.id)).map(p=>p.name)
+    const projs=DB.projects.filter(p=>expState.selectedProjects.has(p.id))
+    const names=projs.map(p=>p.name)
     filenameSuffix = names.length===1?`-${names[0].toLowerCase().replace(/\s+/g,'-')}`:`-${names.length}-projects`
+    exportContext.projectNames = names
   }
   if(expState.fileType==='csv') doExportCSV(filtered, filenameSuffix)
-  else doExportPDF(filtered, filenameSuffix)
+  else doExportPDF(filtered, filenameSuffix, exportContext)
   closeExportDialog()
 }
 
@@ -1432,18 +1429,64 @@ function doExportCSV(entries, suffix) {
   dl(csv, `time-report${suffix}-${toISO(new Date())}.csv`, 'text/csv')
 }
 
-function doExportPDF(entries, suffix) {
+function doExportPDF(entries, suffix, ctx) {
   const sorted=[...entries].sort((a,b)=>a.date.localeCompare(b.date)||a.startMinutes-b.startMinutes)
-  const projTotals=new Map()
-  sorted.forEach(e=>{ const p=DB.projects.find(x=>x.id===e.projectId); const key=p?.name||'?'; if(!projTotals.has(key)) projTotals.set(key,{mins:0,tasks:new Map()}); const pt=projTotals.get(key); pt.mins+=e.endMinutes-e.startMinutes; const t=DB.templates.find(x=>x.id===e.taskTemplateId); pt.tasks.set(t?.name||'?',(pt.tasks.get(t?.name||'?')||0)+(e.endMinutes-e.startMinutes)) })
-  let html=`<!DOCTYPE html><html><head><title>Time Report</title><style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:40px;max-width:900px;margin:auto;color:#333}table{width:100%;border-collapse:collapse;margin:12px 0}th,td{border:1px solid #ddd;padding:8px 12px;font-size:13px;text-align:left}th{background:#f7f7f8;font-size:11px;text-transform:uppercase;font-weight:600;color:#555}h1{font-size:20px;margin-bottom:4px}h2{font-size:15px;margin-top:28px;color:#444}.meta{color:#888;font-size:12px;margin-bottom:20px}tr:nth-child(even){background:#fafafa}@media print{body{padding:20px}}</style></head><body>`
-  html+=`<h1>Time Report</h1><p class="meta">Generated ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</p>`
-  const grandTotal=[...projTotals.values()].reduce((s,v)=>s+v.mins,0)
-  html+=`<h2>Summary (${fmtDur(grandTotal)} total)</h2><table><tr><th>Project</th><th>Hours</th><th>Tasks</th></tr>`
-  for(const[name,v] of projTotals){ const taskList=[...v.tasks.entries()].map(([t,m])=>`${t} (${fmtDur(m)})`).join(', '); html+=`<tr><td><strong>${esc(name)}</strong></td><td>${(v.mins/60).toFixed(2)}h</td><td style="font-size:12px;color:#666">${esc(taskList)}</td></tr>` }
-  html+=`</table><h2>Detail</h2><table><tr><th>Date</th><th>Project</th><th>Task</th><th>Time</th><th>Duration</th><th>Notes</th></tr>`
-  sorted.forEach(e=>{ const p=DB.projects.find(x=>x.id===e.projectId),t=DB.templates.find(x=>x.id===e.taskTemplateId); html+=`<tr><td>${e.date}</td><td>${esc(p?.name||'')}</td><td>${esc(t?.name||'')}</td><td>${mToTime(e.startMinutes)}–${mToTime(e.endMinutes)}</td><td>${fmtDur(e.endMinutes-e.startMinutes)}</td><td style="font-size:12px;color:#666">${esc(e.notes)}</td></tr>` })
+
+  // ── Dynamic report title ───────────────────────────────────────
+  let reportTitle = 'Time Report'
+  if(ctx.outputBy === 'client') {
+    const label = ctx.clientNames && ctx.clientNames.length === 1
+      ? `${ctx.clientNames[0]}` : `${(ctx.clientNames||[]).join(', ')}`
+    reportTitle = `Client Report: ${label}`
+  } else if(ctx.outputBy === 'daterange') {
+    const fmt = d => { const [y,m,day]=d.split('-'); return `${parseInt(m)}/${parseInt(day)}/${y}` }
+    reportTitle = `Time Report: ${fmt(ctx.startDate)} – ${fmt(ctx.endDate)}`
+  } else if(ctx.outputBy === 'project') {
+    const label = ctx.projectNames && ctx.projectNames.length === 1
+      ? `${ctx.projectNames[0]}` : `${(ctx.projectNames||[]).join(', ')}`
+    reportTitle = `Project Report: ${label}`
+  }
+
+  // ── Detail date range for section header ──────────────────────
+  const detailDates = sorted.map(e=>e.date)
+  const earliestDate = detailDates[0], latestDate = detailDates[detailDates.length-1]
+  const fmtD = d => { const [y,m,day]=d.split('-'); return `${parseInt(m)}/${parseInt(day)}/${y}` }
+  const detailHeader = earliestDate
+    ? `Detail: ${fmtD(earliestDate)} – ${fmtD(latestDate)}`
+    : 'Detail'
+
+  // ── Summary by project (alphabetical, with client column) ──────
+  const projTotals = new Map()
+  sorted.forEach(e=>{
+    const p=DB.projects.find(x=>x.id===e.projectId)
+    const key=p?.id||'?'
+    if(!projTotals.has(key)) projTotals.set(key,{name:p?.name||'?',client:p?.client||'',mins:0,tasks:new Map()})
+    const pt=projTotals.get(key)
+    pt.mins+=e.endMinutes-e.startMinutes
+    const t=DB.templates.find(x=>x.id===e.taskTemplateId)
+    pt.tasks.set(t?.name||'?',(pt.tasks.get(t?.name||'?')||0)+(e.endMinutes-e.startMinutes))
+  })
+  const sortedProjects=[...projTotals.values()].sort((a,b)=>a.name.localeCompare(b.name))
+
+  const grandTotal=sortedProjects.reduce((s,v)=>s+v.mins,0)
+
+  let html=`<!DOCTYPE html><html><head><title>${esc(reportTitle)}</title><style>body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:40px;max-width:900px;margin:auto;color:#333}table{width:100%;border-collapse:collapse;margin:12px 0}th,td{border:1px solid #ddd;padding:8px 12px;font-size:13px;text-align:left}th{background:#f7f7f8;font-size:11px;text-transform:uppercase;font-weight:600;color:#555}h1{font-size:20px;margin-bottom:4px}h2{font-size:15px;margin-top:28px;color:#444}.meta{color:#888;font-size:12px;margin-bottom:20px}tr:nth-child(even){background:#fafafa}@media print{body{padding:20px}}</style></head><body>`
+  html+=`<h1>${esc(reportTitle)}</h1><p class="meta">Generated ${new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'})}</p>`
+
+  html+=`<h2>Summary (${fmtDur(grandTotal)} total)</h2><table><tr><th>Project</th><th>Client</th><th>Hours</th><th>Tasks</th></tr>`
+  for(const v of sortedProjects){
+    const taskList=[...v.tasks.entries()].map(([t,m])=>`${t} (${fmtDur(m)})`).join(', ')
+    html+=`<tr><td><strong>${esc(v.name)}</strong></td><td style="color:#666">${esc(v.client||'—')}</td><td>${(v.mins/60).toFixed(2)}h</td><td style="font-size:12px;color:#666">${esc(taskList)}</td></tr>`
+  }
+  html+=`</table>`
+
+  html+=`<h2>${esc(detailHeader)}</h2><table><tr><th>Date</th><th>Project</th><th>Task</th><th>Time</th><th>Duration</th><th>Notes</th></tr>`
+  sorted.forEach(e=>{
+    const p=DB.projects.find(x=>x.id===e.projectId),t=DB.templates.find(x=>x.id===e.taskTemplateId)
+    html+=`<tr><td>${e.date}</td><td>${esc(p?.name||'')}</td><td>${esc(t?.name||'')}</td><td>${mToTime(e.startMinutes)}–${mToTime(e.endMinutes)}</td><td>${fmtDur(e.endMinutes-e.startMinutes)}</td><td style="font-size:12px;color:#666">${esc(e.notes)}</td></tr>`
+  })
   html+=`</table></body></html>`
+
   const exportDate = toISO(new Date())
   dl(html, `time-report${suffix}-${exportDate}.html`, 'text/html')
 }
@@ -1784,7 +1827,7 @@ function saveTimerState() {
 
 window.startTimer = () => {
   if(!DB.selProject || !DB.selTemplate) {
-    showConfirmModal({ title: 'Select a project and task', message: 'Please select a project and a task from the sidebar before starting the timer.', danger: false })
+    showConfirmModal({ title: 'Select a project and task from the sidebar before starting the timer.', message: '.', danger: false })
     return
   }
   timerStart = Date.now()
@@ -1842,17 +1885,28 @@ function updateTimerDisplay() {
 // PROJECT TOOLTIP
 // ═══════════════════════════════════════════════════════════════
 let _tooltipEl = null
-window.showProjTooltip = (e, text) => {
+window.showProjTooltip = (e, raw) => {
   if(!_tooltipEl) {
     _tooltipEl = document.createElement('div')
     _tooltipEl.className = 'proj-tooltip'
     document.body.appendChild(_tooltipEl)
   }
-  _tooltipEl.textContent = text
+  try {
+    const d = JSON.parse(raw)
+    _tooltipEl.innerHTML =
+      (d.client ? `<div class="tt-client">${_te(d.client)}</div>` : '') +
+      `<div class="tt-project">${_te(d.project)}</div>` +
+      (d.task ? `<div class="tt-task">${_te(d.task)}</div>` : '') +
+      `<div class="tt-time">${_te(d.time)}</div>`
+  } catch {
+    _tooltipEl.textContent = raw
+  }
   _tooltipEl.classList.add('visible')
   _positionTooltip(e)
 }
+function _te(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') }
 window.hideProjTooltip = () => { if(_tooltipEl) _tooltipEl.classList.remove('visible') }
+window._updateTooltipPos = (e) => { if(_tooltipEl && _tooltipEl.classList.contains('visible')) _positionTooltip(e) }
 function _positionTooltip(e) {
   if(!_tooltipEl) return
   const x = e.clientX + 12, y = e.clientY - 28
