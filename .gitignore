@@ -10,6 +10,7 @@ Desktop.ini
 *~
 ARCHIVE/
 files.zip
+git.txt
 
 # Node (if anyone runs npx serve)
 node_modules/
