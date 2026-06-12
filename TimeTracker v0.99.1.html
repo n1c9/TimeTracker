@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>TimeTracker v0.99</title>
+<title>TimeTracker v0.91</title>
 <style>
 /* Tailwind CSS v3.4 - compiled utilities (offline-safe) */
 *,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: ;box-sizing:border-box;border:0 solid #e5e7eb}::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1}:after,:before{--tw-content:""}html{line-height:1.5;-webkit-text-size-adjust:100%;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-size:1em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;font-weight:inherit;line-height:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}img,video{max-width:100%;height:auto}[hidden]{display:none}
@@ -136,13 +136,33 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 .summary-chart .chart-bar:hover::after{content:attr(data-label);position:absolute;bottom:100%;left:50%;transform:translateX(-50%);font-size:10px;white-space:nowrap;background:var(--text);color:var(--surface);padding:2px 6px;border-radius:3px;margin-bottom:2px}
 
 /* Micro view for very small screens (< 480px wide or < 320px tall) */
-#micro-view{display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;height:100%;padding:24px 20px;text-align:center;background:var(--surface)}
-#micro-view select{width:100%;padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:15px;outline:none}
+#micro-view{display:none;flex-direction:column;justify-content:center;height:100%;padding:clamp(6px,4%,16px);background:var(--surface);overflow:hidden;box-sizing:border-box}
+#micro-view .micro-card{display:flex;flex-direction:column;gap:clamp(4px,2.5%,10px);max-width:280px;margin:0 auto;width:100%}
+#micro-view .micro-field{display:flex;flex-direction:column;gap:2px;min-height:0}
+#micro-view .micro-field label{font-size:clamp(8px,2.2vw,10px);font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;padding-left:2px;white-space:nowrap;overflow:hidden}
+#micro-view select{width:100%;padding:clamp(4px,1.8vh,8px) 10px;border-radius:8px;border:1px solid var(--border);background:var(--surface);color:var(--text);font-size:clamp(11px,3vw,13px);outline:none;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;background-size:14px;padding-right:28px;min-height:0}
 #micro-view select:focus{border-color:var(--primary)}
-#micro-view .micro-timer{font-size:28px;font-family:ui-monospace,monospace;font-weight:700;color:var(--primary);letter-spacing:.05em}
-#micro-view .micro-btn{padding:12px 32px;font-size:16px;border-radius:10px;border:none;cursor:pointer;font-weight:600;width:100%}
+#micro-view .micro-timer-row{display:flex;align-items:center;justify-content:center;gap:8px;padding:clamp(2px,1.5vh,10px) 0 2px;border-top:1px solid var(--border);margin-top:2px}
+#micro-view .micro-timer{font-size:clamp(16px,7vw,26px);font-family:ui-monospace,'SF Mono',monospace;font-weight:700;color:var(--primary);letter-spacing:.04em;font-variant-numeric:tabular-nums;white-space:nowrap}
+#micro-view .micro-pulse{width:8px;height:8px;border-radius:50%;background:var(--danger);animation:microPulse 1.4s ease-in-out infinite;flex-shrink:0}
+@keyframes microPulse{0%,100%{opacity:1}50%{opacity:.25}}
+#micro-view .micro-btn{padding:clamp(6px,2vh,11px);font-size:clamp(11px,3.2vw,14px);border-radius:8px;border:none;cursor:pointer;font-weight:600;width:100%;margin-top:2px;flex-shrink:0}
 #micro-view .micro-btn.start{background:var(--primary);color:var(--primary-fg)}
 #micro-view .micro-btn.stop{background:var(--danger);color:#fff}
+/* Below ~280px tall or ~260px wide: drop the dropdowns, show only timer + button */
+@media(max-height:280px),(max-width:260px){
+  #micro-view .micro-field{display:none}
+  #micro-view .micro-timer-row{border-top:none;margin-top:0;padding-top:0}
+  #micro-view .micro-card{justify-content:center;height:100%}
+}
+/* Below ~150px tall: collapse to a single row, timer beside button */
+@media(max-height:150px){
+  #micro-view{padding:4px}
+  #micro-view .micro-card{flex-direction:row;align-items:center;justify-content:center;gap:8px;max-width:none}
+  #micro-view .micro-timer-row{padding:0}
+  #micro-view .micro-btn{width:auto;padding:6px 14px;margin-top:0;white-space:nowrap}
+  #micro-view .micro-timer{font-size:clamp(14px,5vh,22px)}
+}
 @media(max-width:480px),(max-height:320px){
   #app>*:not(#micro-view){display:none!important}
   #micro-view{display:flex!important}
@@ -349,20 +369,26 @@ function buildApp() {
     .map(p=>`<option value="${p.id}" ${DB.selProject===p.id?'selected':''}>${esc(p.client?p.client+' — '+p.name:p.name)}</option>`).join('')
   const tmplOptions = DB.templates.map(t=>`<option value="${t.id}" ${DB.selTemplate===t.id?'selected':''}>${esc(t.name)}</option>`).join('')
   const micro = `<div id="micro-view">
-    <div style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:4px">Project</div>
-    <select onchange="selectProject(this.value)"><option value="">— Select Project —</option>${projOptions}</select>
-    <div style="font-size:13px;font-weight:600;color:var(--text-muted);margin-bottom:4px">Task</div>
-    <select onchange="selectTemplate(this.value)"><option value="">— Select Task —</option>${tmplOptions}</select>
-    ${timerStart
-      ? `<div class="micro-timer" id="micro-timer-display">00:00:00</div>
-         <button class="micro-btn stop" onclick="stopTimer()">⏹ Stop Timer</button>`
-      : `<button class="micro-btn start" onclick="startTimer()">▶ Start Timer</button>`}
+    <div class="micro-card">
+      <div class="micro-field">
+        <label for="micro-project">Project</label>
+        <select id="micro-project" onchange="selectProject(this.value)"><option value="">— Select Project —</option>${projOptions}</select>
+      </div>
+      <div class="micro-field">
+        <label for="micro-task">Task</label>
+        <select id="micro-task" onchange="selectTemplate(this.value)"><option value="">— Select Task —</option>${tmplOptions}</select>
+      </div>
+      ${timerStart
+        ? `<div class="micro-timer-row"><span class="micro-pulse"></span><span class="micro-timer" id="micro-timer-display">00:00:00</span></div>
+           <button class="micro-btn stop" onclick="stopTimer()">⏹ Stop Timer</button>`
+        : `<button class="micro-btn start" onclick="startTimer()">▶ Start Timer</button>`}
+    </div>
   </div>`
   return `
     ${micro}
     ${buildToolbar()}
     <div class="flex flex-1 overflow-hidden relative">
-      <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 z-40 mobile-only" style="display:none" onclick="closeSidebar()"></div>
+      <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 z-40 mobile-only" style="display:${mobileSidebarOpen?'block':'none'}" onclick="closeSidebar()"></div>
       ${buildSidebar()}
       <div class="flex-1 flex overflow-hidden">
         ${DB.view==='month' ? buildMonthView() : buildTimeGrid()}
@@ -437,7 +463,10 @@ function buildSidebar() {
   const tCollapsed = DB.panelsCollapsed.templates
   const eCollapsed = DB.panelsCollapsed.export
 
-  return `<aside id="sidebar" class="w-64 border-r border-main bg-surface flex-col overflow-hidden flex-shrink-0 hidden md:flex" style="z-index:45;position:relative;width:${DB.sidebarWidth||256}px">
+  const mobileOpenClass = mobileSidebarOpen ? 'flex' : 'hidden'
+  const mobileOpenStyle = mobileSidebarOpen ? 'position:fixed;top:0;bottom:0;left:0;width:16rem;' : ''
+
+  return `<aside id="sidebar" class="w-64 border-r border-main bg-surface flex-col overflow-hidden flex-shrink-0 ${mobileOpenClass} md:flex" style="z-index:45;position:relative;width:${DB.sidebarWidth||256}px;${mobileOpenStyle}">
     <div id="sidebar-resize-handle" title="Drag to resize"></div>
     <div class="flex items-center justify-between p-3 border-b border-main">
       <h2 class="font-semibold text-sm">Select a project below</h2>
@@ -926,15 +955,9 @@ window.doRedo = doRedo
 window.toggleSidebarCollapse = ()=>{ DB.sidebarCollapsed=!DB.sidebarCollapsed; save(); render() }
 window.togglePanel = (name)=>{ if(!DB.panelsCollapsed) DB.panelsCollapsed={}; DB.panelsCollapsed[name]=!DB.panelsCollapsed[name]; save(); render() }
 
-window.toggleSidebar = ()=>{
-  const sb=document.getElementById('sidebar'), ov=document.getElementById('sidebar-overlay')
-  sb.style.position='fixed'; sb.style.top='0'; sb.style.bottom='0'; sb.style.left='0'; sb.style.width='16rem'
-  sb.classList.remove('hidden'); sb.classList.add('flex'); ov.style.display='block'
-}
-window.closeSidebar = ()=>{
-  const sb=document.getElementById('sidebar'), ov=document.getElementById('sidebar-overlay')
-  sb.classList.add('hidden'); sb.classList.remove('flex'); sb.style.position=''; ov.style.display='none'
-}
+let mobileSidebarOpen = false
+window.toggleSidebar = ()=>{ mobileSidebarOpen = !mobileSidebarOpen; render() }
+window.closeSidebar = ()=>{ mobileSidebarOpen = false; render() }
 
 // ── Reusable confirm/alert modal (replaces browser confirm() / alert()) ──
 function showConfirmModal({ title, message, confirmLabel = 'Delete', danger = true, onConfirm, onCancel }) {
@@ -2095,13 +2118,7 @@ window.startTimer = () => {
   timerStart = Date.now()
   saveTimerState()
   timerInterval = setInterval(updateTimerDisplay, 1000)
-  // Swap toolbar button without full re-render
-  const startBtn = document.querySelector('button[onclick="startTimer()"]')
-  if (startBtn) {
-    startBtn.outerHTML = `<span id="timer-display" class="text-xs font-mono text-muted mr-1">00:00:00</span><button class="btn btn-sm" onclick="stopTimer()" style="color:var(--danger);border-color:var(--danger)">⏹ Stop</button>`
-  } else {
-    render()
-  }
+  render()
 }
 window.stopTimer = () => {
   if(!timerStart) return
