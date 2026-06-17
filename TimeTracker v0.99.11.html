@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>TimeTracker v0.91</title>
+<title>TimeTracker v0.99.11</title>
 <style>
 /* Tailwind CSS v3.4 - compiled utilities (offline-safe) */
 *,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: ;box-sizing:border-box;border:0 solid #e5e7eb}::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1}:after,:before{--tw-content:""}html{line-height:1.5;-webkit-text-size-adjust:100%;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-size:1em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;font-weight:inherit;line-height:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}img,video{max-width:100%;height:auto}[hidden]{display:none}
@@ -46,10 +46,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
 #ctx-bright-slider::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:#fff;box-shadow:0 0 6px #ff71ce;cursor:pointer;border:2px solid #ff71ce}
 .ctx-preview-swatch{width:22px;height:22px;border-radius:6px;border:2px solid #ff71ce88;flex-shrink:0;box-shadow:0 0 8px currentColor}
 
-.entry-block{position:absolute;border-radius:6px;cursor:grab;overflow:hidden;transition:box-shadow .12s;touch-action:none}
+.entry-block{position:absolute;border-radius:6px;cursor:grab;overflow:hidden;transition:box-shadow .12s;touch-action:none;-webkit-user-select:none;-ms-user-select:none;user-select:none;-webkit-user-drag:none;-webkit-touch-callout:none}
 .entry-block:hover{box-shadow:0 2px 12px rgba(0,0,0,.15)}
-.resize-n{position:absolute;top:0;left:0;right:0;height:6px;cursor:n-resize;z-index:5}
-.resize-s{position:absolute;bottom:0;left:0;right:0;height:6px;cursor:s-resize;z-index:5}
+.resize-n{position:absolute;top:0;left:0;right:0;height:6px;cursor:n-resize;z-index:5;touch-action:none;-webkit-user-select:none;user-select:none}
+.resize-s{position:absolute;bottom:0;left:0;right:0;height:6px;cursor:s-resize;z-index:5;touch-action:none;-webkit-user-select:none;user-select:none}
+body.app-dragging,body.app-dragging *{-webkit-user-select:none!important;-ms-user-select:none!important;user-select:none!important}
 @media(pointer:coarse){.resize-n{height:14px}.resize-s{height:14px}}
 .non-work-hour{background:color-mix(in srgb,var(--surface-alt) 80%,var(--border) 20%);opacity:.6}
 .hour-line{border-bottom:1px solid var(--border)}
@@ -357,6 +358,8 @@ seedDemo()
 // RENDER
 // ═══════════════════════════════════════════════════════════════
 function render() {
+  hideProjTooltip()
+  hideTimeTooltip()
   const app = document.getElementById('app')
   app.innerHTML = buildApp()
   applyPostRender()
@@ -731,6 +734,16 @@ function hideTimeTooltip() {
   if(tt) tt.style.display = 'none'
 }
 
+function _captureDrag(el, e) {
+  drag.pointerId = e.pointerId
+  try { el.setPointerCapture(e.pointerId); drag.capEl = el } catch(_) {}
+  document.body.classList.add('app-dragging')
+}
+function _releaseDragCapture(d) {
+  if(d && d.capEl) { try { d.capEl.releasePointerCapture(d.pointerId) } catch(_) {} }
+  document.body.classList.remove('app-dragging')
+}
+
 document.addEventListener('pointerdown', function(e) {
   if(e.target.closest('.modal-bg, .ctx-menu, button, select, input, a, .btn')) return
   closeCtxMenu()
@@ -746,6 +759,7 @@ document.addEventListener('pointerdown', function(e) {
     const entry = DB.entries.find(x=>x.id===id)
     if(!entry) return
     drag = { type:'resize', id, edge:resizeEl.dataset.resize, origStart:entry.startMinutes, origEnd:entry.endMinutes, colEl:colInfo.el }
+    _captureDrag(resizeEl, e)
     document.body.style.cursor = resizeEl.dataset.resize==='top'?'n-resize':'s-resize'
     showTimeTooltip(e.clientX, e.clientY, resizeEl.dataset.resize==='top'?mToTime(entry.startMinutes):mToTime(entry.endMinutes))
   } else if(entryEl) {
@@ -756,6 +770,7 @@ document.addEventListener('pointerdown', function(e) {
     if(isTouchDevice()) {
       const clickMin = getMins(e.clientY, colInfo.el)
       drag = { type:'pending', id, clickMin, origStart:entry.startMinutes, origEnd:entry.endMinutes, origDate:entry.date, dur:entry.endMinutes-entry.startMinutes, colEl:colInfo.el, moved:false, date:colInfo.date, startMin:clickMin, curMin:clickMin }
+      _captureDrag(entryEl, e)
       longPressTimer = setTimeout(()=>{
         if(drag && drag.type==='pending') { drag.type='move'; document.body.style.cursor='grabbing'; if(navigator.vibrate) navigator.vibrate(30) }
         longPressTimer = null
@@ -763,6 +778,7 @@ document.addEventListener('pointerdown', function(e) {
     } else {
       const clickMin = getMins(e.clientY, colInfo.el)
       drag = { type:'move', id, clickMin, origStart:entry.startMinutes, origEnd:entry.endMinutes, origDate:entry.date, dur:entry.endMinutes-entry.startMinutes, colEl:colInfo.el, moved:false }
+      _captureDrag(entryEl, e)
       document.body.style.cursor = 'grabbing'
       showTimeTooltip(e.clientX, e.clientY, `${mToTime(entry.startMinutes)}–${mToTime(entry.endMinutes)}`)
     }
@@ -771,6 +787,7 @@ document.addEventListener('pointerdown', function(e) {
     e.preventDefault()
     const min = getMins(e.clientY, colInfo.el)
     drag = { type:'create', date:colInfo.date, startMin:min, curMin:min, colEl:colInfo.el }
+    _captureDrag(colInfo.el, e)
     showDragPreview(colInfo.el, min, min)
     showTimeTooltip(e.clientX, e.clientY, mToTime(min))
   }
@@ -785,7 +802,7 @@ document.addEventListener('pointermove', function(e) {
     const curMin = getMins(e.clientY, drag.colEl)
     if(Math.abs(curMin - drag.startMin) >= 15) {
       clearTimeout(longPressTimer); longPressTimer = null
-      drag = { type:'create', date:drag.date, startMin:drag.startMin, curMin, colEl:drag.colEl }
+      drag = { type:'create', date:drag.date, startMin:drag.startMin, curMin, colEl:drag.colEl, pointerId:drag.pointerId, capEl:drag.capEl }
       showDragPreview(drag.colEl, drag.startMin, curMin)
     }
     return
@@ -831,6 +848,7 @@ document.addEventListener('pointerup', function(e) {
   document.body.style.cursor = ''
   removeDragPreview()
   hideTimeTooltip()
+  _releaseDragCapture(drag)
 
   if(drag.type === 'pending') {
     const entry = DB.entries.find(x=>x.id===drag.id)
@@ -865,6 +883,7 @@ document.addEventListener('pointercancel', function() {
   if(longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null }
   hideTimeTooltip()
   if(drag) {
+    _releaseDragCapture(drag)
     if(drag.type==='move'||drag.type==='resize'||drag.type==='pending') {
       const entry = DB.entries.find(x=>x.id===drag.id)
       if(entry) { entry.startMinutes=drag.origStart; entry.endMinutes=drag.origEnd; if(drag.origDate) entry.date=drag.origDate }
@@ -872,6 +891,25 @@ document.addEventListener('pointercancel', function() {
     drag = null; render()
   }
 })
+
+function forceEndAllInteractions() {
+  if(longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null }
+  hideTimeTooltip()
+  hideProjTooltip()
+  if(drag) {
+    _releaseDragCapture(drag)
+    if(drag.type==='move'||drag.type==='resize'||drag.type==='pending') {
+      const entry = DB.entries.find(x=>x.id===drag.id)
+      if(entry) { entry.startMinutes=drag.origStart; entry.endMinutes=drag.origEnd; if(drag.origDate) entry.date=drag.origDate }
+    }
+    drag = null
+    document.body.style.cursor = ''
+    removeDragPreview()
+    render()
+  }
+}
+window.addEventListener('blur', forceEndAllInteractions)
+document.addEventListener('visibilitychange', () => { if(document.hidden) forceEndAllInteractions() })
 
 document.addEventListener('selectstart', e => { if(drag) e.preventDefault() })
 document.addEventListener('contextmenu', function(e) {
@@ -2200,7 +2238,17 @@ function _positionTooltip(e) {
 // ═══════════════════════════════════════════════════════════════
 ;(function initSidebarResize() {
   const MIN_W = 180, MAX_W = 480
-  let resizing = false, startX = 0, startW = 0
+  let resizing = false, startX = 0, startW = 0, capturedHandle = null, capturedPointerId = null
+
+  function endResize() {
+    if(!resizing) return
+    resizing = false
+    document.body.style.cursor = ''
+    document.body.style.userSelect = ''
+    document.getElementById('sidebar-resize-handle')?.classList.remove('dragging')
+    if(capturedHandle) { try { capturedHandle.releasePointerCapture(capturedPointerId) } catch(_) {} }
+    capturedHandle = null; capturedPointerId = null
+  }
 
   document.addEventListener('pointerdown', e => {
     const handle = e.target.closest('#sidebar-resize-handle')
@@ -2212,6 +2260,8 @@ function _positionTooltip(e) {
     handle.classList.add('dragging')
     document.body.style.cursor = 'col-resize'
     document.body.style.userSelect = 'none'
+    capturedPointerId = e.pointerId
+    try { handle.setPointerCapture(e.pointerId); capturedHandle = handle } catch(_) {}
   })
 
   document.addEventListener('pointermove', e => {
@@ -2224,16 +2274,16 @@ function _positionTooltip(e) {
 
   document.addEventListener('pointerup', e => {
     if(!resizing) return
-    resizing = false
-    document.body.style.cursor = ''
-    document.body.style.userSelect = ''
-    document.getElementById('sidebar-resize-handle')?.classList.remove('dragging')
+    endResize()
     const sidebar = document.getElementById('sidebar')
     if(sidebar) {
       DB.sidebarWidth = sidebar.offsetWidth
       save()
     }
   })
+
+  document.addEventListener('pointercancel', endResize)
+  window.addEventListener('blur', endResize)
 })()
 
 // ═══════════════════════════════════════════════════════════════
