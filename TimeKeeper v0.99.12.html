@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<title>TimeTracker v0.99.11</title>
+<title>TimeTracker v0.99.12</title>
 <style>
 /* Tailwind CSS v3.4 - compiled utilities (offline-safe) */
 *,:after,:before{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgba(59,130,246,.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: ;box-sizing:border-box;border:0 solid #e5e7eb}::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1}:after,:before{--tw-content:""}html{line-height:1.5;-webkit-text-size-adjust:100%;tab-size:4;font-family:ui-sans-serif,system-ui,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-size:1em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;font-weight:inherit;line-height:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset,legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}img,video{max-width:100%;height:auto}[hidden]{display:none}
@@ -218,39 +218,51 @@ function pushHist(a) { histStack.push(a); if(histStack.length>60) histStack.shif
 function doUndo() {
   const a=histStack.pop(); if(!a) return
   futureStack.push(a)
-  if(a.t==='add') DB.entries=DB.entries.filter(e=>e.id!==a.id)
+  if(a.t==='add') { DB.entries=DB.entries.filter(e=>e.id!==a.id); if(a.absorbed?.length) DB.entries.push(...a.absorbed.map(x=>({...x}))) }
   else if(a.t==='del') DB.entries.push(a.entry)
-  else if(a.t==='upd') { const e=DB.entries.find(x=>x.id===a.id); if(e) Object.assign(e,a.before) }
+  else if(a.t==='upd') { const e=DB.entries.find(x=>x.id===a.id); if(e) Object.assign(e,a.before); if(a.absorbed?.length) DB.entries.push(...a.absorbed.map(x=>({...x}))) }
   else if(a.t==='clearWeek') DB.entries.push(...a.entries)
   else if(a.t==='delTemplate') DB.templates.push(a.template)
   else if(a.t==='delProject') { DB.projects.push(a.project); DB.entries.push(...(a.entries||[])) }
+  else if(a.t==='import') {
+    DB.projects=a.before.projects.map(x=>({...x})); DB.templates=a.before.templates.map(x=>({...x}))
+    DB.entries=a.before.entries.map(x=>({...x})); DB.theme=a.before.theme; DB.view=a.before.view
+    DB.selProject=a.before.selProject; DB.selTemplate=a.before.selTemplate
+    document.documentElement.classList.toggle('dark', DB.theme==='dark')
+  }
   save(); render()
 }
 function doRedo() {
   const a=futureStack.pop(); if(!a) return
   histStack.push(a)
-  if(a.t==='add') DB.entries.push(a.entry)
+  if(a.t==='add') { DB.entries.push({...a.entry}); if(a.absorbed?.length){const ids=new Set(a.absorbed.map(x=>x.id)); DB.entries=DB.entries.filter(e=>!ids.has(e.id))} }
   else if(a.t==='del') DB.entries=DB.entries.filter(e=>e.id!==a.id)
-  else if(a.t==='upd') { const e=DB.entries.find(x=>x.id===a.id); if(e) Object.assign(e,a.after) }
+  else if(a.t==='upd') { const e=DB.entries.find(x=>x.id===a.id); if(e) Object.assign(e,a.after); if(a.absorbed?.length){const ids=new Set(a.absorbed.map(x=>x.id)); DB.entries=DB.entries.filter(e=>!ids.has(e.id))} }
   else if(a.t==='clearWeek') { const ids=new Set(a.entries.map(x=>x.id)); DB.entries=DB.entries.filter(e=>!ids.has(e.id)) }
   else if(a.t==='delTemplate') { DB.templates=DB.templates.filter(x=>x.id!==a.template.id); DB.entries=DB.entries.filter(x=>x.taskTemplateId!==a.template.id) }
   else if(a.t==='delProject') { DB.projects=DB.projects.filter(x=>x.id!==a.project.id); if(a.entries?.length){const ids=new Set(a.entries.map(x=>x.id));DB.entries=DB.entries.filter(e=>!ids.has(e.id))} }
+  else if(a.t==='import') {
+    DB.projects=a.after.projects.map(x=>({...x})); DB.templates=a.after.templates.map(x=>({...x}))
+    DB.entries=a.after.entries.map(x=>({...x})); DB.theme=a.after.theme; DB.view=a.after.view
+    DB.selProject=a.after.selProject; DB.selTemplate=a.after.selTemplate
+    document.documentElement.classList.toggle('dark', DB.theme==='dark')
+  }
   save(); render()
 }
 
 function addEntry(data) {
   const entry = { id:uid(), createdAt:Date.now(), updatedAt:Date.now(), notes:'', tags:[], ...data }
   DB.entries.push(entry)
-  pushHist({ t:'add', id:entry.id, entry:{...entry} })
-  mergeOverlapping(entry.id)
+  const absorbed = mergeOverlapping(entry.id)
+  pushHist({ t:'add', id:entry.id, entry:{...entry}, absorbed })
   save(); return entry
 }
 function updateEntry(id, patch) {
   const e=DB.entries.find(x=>x.id===id); if(!e) return
   const before={...e}
   Object.assign(e, patch, {updatedAt:Date.now()})
-  pushHist({ t:'upd', id, before, after:{...e} })
-  mergeOverlapping(id)
+  const absorbed = mergeOverlapping(id)
+  pushHist({ t:'upd', id, before, after:{...e}, absorbed })
   save()
 }
 function deleteEntryById(id) {
@@ -262,13 +274,14 @@ function deleteEntryById(id) {
 
 function mergeOverlapping(targetId) {
   const target = DB.entries.find(x=>x.id===targetId)
-  if(!target) return false
+  if(!target) return []
   const overlaps = DB.entries.filter(e =>
     e.id !== targetId && e.date === target.date &&
     e.projectId === target.projectId && e.taskTemplateId === target.taskTemplateId &&
     e.startMinutes < target.endMinutes && e.endMinutes > target.startMinutes
   )
-  if(!overlaps.length) return false
+  if(!overlaps.length) return []
+  const absorbed = overlaps.map(o=>({...o}))
   for(const o of overlaps) {
     target.startMinutes = Math.min(target.startMinutes, o.startMinutes)
     target.endMinutes = Math.max(target.endMinutes, o.endMinutes)
@@ -277,7 +290,7 @@ function mergeOverlapping(targetId) {
   }
   DB.entries = DB.entries.filter(e=>!overlaps.some(o=>o.id===e.id))
   target.updatedAt = Date.now()
-  return true
+  return absorbed
 }
 
 function layoutEntries(entries) {
@@ -861,7 +874,12 @@ document.addEventListener('pointerup', function(e) {
     drag = null; render()
   } else if(drag.type === 'resize') {
     const entry = DB.entries.find(x=>x.id===drag.id)
-    if(entry && (entry.startMinutes!==drag.origStart || entry.endMinutes!==drag.origEnd)) { mergeOverlapping(drag.id); save() }
+    if(entry && (entry.startMinutes!==drag.origStart || entry.endMinutes!==drag.origEnd)) {
+      const before = { startMinutes:drag.origStart, endMinutes:drag.origEnd, date:entry.date, notes:entry.notes, tags:[...entry.tags] }
+      const absorbed = mergeOverlapping(drag.id)
+      pushHist({ t:'upd', id:drag.id, before, after:{ startMinutes:entry.startMinutes, endMinutes:entry.endMinutes, date:entry.date, notes:entry.notes, tags:[...entry.tags] }, absorbed })
+      save()
+    }
     else if(entry) { entry.startMinutes=drag.origStart; entry.endMinutes=drag.origEnd }
     drag = null; render()
   } else if(drag.type === 'move') {
@@ -872,8 +890,12 @@ document.addEventListener('pointerup', function(e) {
       drag = null; render()
     } else {
       const entry = DB.entries.find(x=>x.id===drag.id)
-      if(entry) pushHist({ t:'upd', id:drag.id, before:{startMinutes:drag.origStart, endMinutes:drag.origEnd, date:drag.origDate}, after:{startMinutes:entry.startMinutes, endMinutes:entry.endMinutes, date:entry.date} })
-      mergeOverlapping(drag.id); save()
+      if(entry) {
+        const before = { startMinutes:drag.origStart, endMinutes:drag.origEnd, date:drag.origDate, notes:entry.notes, tags:[...entry.tags] }
+        const absorbed = mergeOverlapping(drag.id)
+        pushHist({ t:'upd', id:drag.id, before, after:{ startMinutes:entry.startMinutes, endMinutes:entry.endMinutes, date:entry.date, notes:entry.notes, tags:[...entry.tags] }, absorbed })
+      }
+      save()
       drag = null; render()
     }
   } else drag = null
@@ -1815,7 +1837,53 @@ function doExportPDF(entries, suffix, ctx) {
 }
 
 window.exportConfig = () => { dl(JSON.stringify({projects:DB.projects,templates:DB.templates,entries:DB.entries,preferences:{theme:DB.theme,view:DB.view}},null,2),'time-tracker-config.json','application/json') }
-window.importConfig = () => { const inp=document.createElement('input');inp.type='file';inp.accept='.json'; inp.onchange=async e=>{const f=e.target.files?.[0];if(!f)return;try{const cfg=JSON.parse(await f.text());if(cfg.projects)DB.projects=cfg.projects;if(cfg.templates)DB.templates=cfg.templates;if(cfg.entries)DB.entries=cfg.entries;if(cfg.preferences){DB.theme=cfg.preferences.theme||'light';DB.view=cfg.preferences.view||'week';document.documentElement.classList.toggle('dark',DB.theme==='dark')};save();render()}catch{showConfirmModal({title:'Invalid file',message:'The selected file could not be loaded. Please choose a valid TimeTracker backup (.json) file.',danger:false})}}; inp.click() }
+window.importConfig = () => {
+  const inp = document.createElement('input')
+  inp.type = 'file'; inp.accept = '.json'
+  inp.onchange = async e => {
+    const f = e.target.files?.[0]; if(!f) return
+    let cfg
+    try { cfg = JSON.parse(await f.text()) } catch {
+      showConfirmModal({ title:'Invalid file', message:'The selected file could not be read. Please choose a valid TimeTracker backup (.json) file.', danger:false }); return
+    }
+    if(!Array.isArray(cfg.projects) && !Array.isArray(cfg.templates) && !Array.isArray(cfg.entries)) {
+      showConfirmModal({ title:'Invalid file', message:'This file does not appear to be a valid TimeTracker backup.', danger:false }); return
+    }
+    const curCount = DB.entries.length
+    const newCount = Array.isArray(cfg.entries) ? cfg.entries.length : 0
+    const curWord = curCount === 1 ? 'entry' : 'entries'
+    const newWord = newCount === 1 ? 'entry' : 'entries'
+    showConfirmModal({
+      title: 'Replace all data?',
+      message: `This will remove your ${curCount} existing ${curWord} and load ${newCount} ${newWord} from the backup file. This can be undone with Ctrl+Z.`,
+      confirmLabel: 'Import',
+      danger: true,
+      onConfirm: () => {
+        const before = {
+          projects: DB.projects.map(x=>({...x})), templates: DB.templates.map(x=>({...x})),
+          entries: DB.entries.map(x=>({...x})), theme: DB.theme, view: DB.view,
+          selProject: DB.selProject, selTemplate: DB.selTemplate
+        }
+        if(cfg.projects) DB.projects = cfg.projects
+        if(cfg.templates) DB.templates = cfg.templates
+        if(cfg.entries) DB.entries = cfg.entries
+        if(cfg.preferences) {
+          DB.theme = cfg.preferences.theme || 'light'
+          DB.view = cfg.preferences.view || 'week'
+          document.documentElement.classList.toggle('dark', DB.theme === 'dark')
+        }
+        const after = {
+          projects: DB.projects.map(x=>({...x})), templates: DB.templates.map(x=>({...x})),
+          entries: DB.entries.map(x=>({...x})), theme: DB.theme, view: DB.view,
+          selProject: DB.selProject, selTemplate: DB.selTemplate
+        }
+        pushHist({ t:'import', before, after })
+        save(); render()
+      }
+    })
+  }
+  inp.click()
+}
 function dl(content,name,type){const b=new Blob([content],{type});const u=URL.createObjectURL(b);const a=document.createElement('a');a.href=u;a.download=name;a.click();URL.revokeObjectURL(u)}
 
 // ═══════════════════════════════════════════════════════════════
